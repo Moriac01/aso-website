@@ -31,7 +31,7 @@ const NavMobile = () => {
     const pathname = usePathname()
 
   return (
-        <div className="px-5">
+        <div className="">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
         <Button
