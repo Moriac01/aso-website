@@ -79,8 +79,14 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="col-span-2 mt-6 border-t border-[#d9e0d5] pt-3 text-center text-[13px] text-[#526057] md:col-span-3">
-          © {new Date().getFullYear()} ASO | All rights reserved.
+        <div className="col-span-2 mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-[#d9e0d5] pt-3 text-center text-[13px] text-[#526057] md:col-span-3">
+          <span>© {new Date().getFullYear()} ASO | Tous droits réservés.</span>
+          <Link href="/mentions-legales" className="transition-colors hover:text-[#17483b]">
+            Mentions légales
+          </Link>
+          <Link href="/confidentialite" className="transition-colors hover:text-[#17483b]">
+            Confidentialité
+          </Link>
         </div>
       </div>
     </footer>

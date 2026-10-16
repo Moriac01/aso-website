@@ -352,7 +352,13 @@ export default function ContactPage() {
                     aria-invalid={Boolean(errors.consent)}
                     className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0c7af8] focus:ring-[#0c7af8]"
                   />
-                  <span>J&apos;accepte que les informations fournies soient utilisées pour répondre à ma demande.</span>
+                  <span>
+                    J&apos;accepte que les informations fournies soient utilisées pour répondre à ma demande. Voir notre{" "}
+                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+                      politique de confidentialité
+                    </Link>
+                    .
+                  </span>
                 </label>
                 <FieldError message={errors.consent} />
               </div>

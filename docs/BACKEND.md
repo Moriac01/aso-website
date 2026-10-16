@@ -3,7 +3,8 @@
 Le backend vit **dans la même application Next.js** que le site, grâce à
 [Payload CMS](https://payloadcms.com) (v3) et une base **PostgreSQL (Neon)**.
 
-- Site public : `/`, `/about`, `/actions`, `/news`, `/volunteers`, `/contact`
+- Site public : `/`, `/about`, `/actions`, `/news`, `/volunteers`, `/contact`, `/transparence`, `/donate`,
+  `/mentions-legales`, `/confidentialite`
 - Back-office : `/admin`
 - API REST (lecture du contenu public) : `/api/...`
 
@@ -109,6 +110,16 @@ modifier après coup. Lecture : Président, Trésorerie, Commissaire aux comptes
 **Mettre en service** : Transparence → Moyens de don → Orange Money : saisir le numéro du compte
 **au nom de l'association**, cocher « Afficher sur le site ». Tant qu'aucun moyen n'est actif,
 la page affiche un message d'attente et pas de formulaire.
+
+## Mentions légales et confidentialité
+
+`/mentions-legales` et `/confidentialite` reprennent automatiquement l'identité légale, le
+directeur de la publication et les coordonnées saisis dans Administration → Coordonnées & réseaux.
+Le reste du texte (hébergeurs, durées de conservation, droits) est dans le code des pages :
+**à mettre à jour si l'hébergeur ou les pratiques changent** (et la date « Dernière mise à jour »).
+
+Durées de conservation annoncées : messages 5 ans, adhésions et bénévolat 5 ans après la fin de
+l'engagement, dons 10 ans. Leur suppression n'est pas encore automatique (voir plus bas).
 
 ## Formulaires publics
 
@@ -220,6 +231,10 @@ puis relancez `bun run migrate`.
 - Brancher les autres contenus encore écrits en dur (page Actions, chiffres de la page
   À propos, coordonnées du pied de page) sur le back-office.
 - Base Neon de production distincte de la base de développement.
+- Suppression automatique des données au-delà des durées annoncées dans la politique de
+  confidentialité (tâche planifiée).
+- Renseigner l'email public et l'adresse exacte du siège (Coordonnées & réseaux) : ils
+  apparaissent dans les mentions légales et la politique de confidentialité.
 
 ## Protection des données
 

@@ -34,13 +34,19 @@ export const SiteSettings: GlobalConfig = {
       name: "legal",
       label: "Identité légale",
       type: "group",
-      admin: { description: "Affichée sur la page Transparence et dans le pied de page." },
+      admin: { description: "Affichée sur les pages Transparence, Mentions légales et Confidentialité." },
       fields: [
         { name: "legalName", label: "Nom officiel", type: "text" },
         { name: "registrationNumber", label: "Numéro d’agrément", type: "text" },
         { name: "registrationDate", label: "Date de l’agrément", type: "date", admin: { date: { pickerAppearance: "dayOnly", displayFormat: "dd/MM/yyyy" } } },
         { name: "registrationAuthority", label: "Autorité qui a délivré l’agrément", type: "text" },
         { name: "headOffice", label: "Siège social", type: "text" },
+        {
+          name: "publicationDirector",
+          label: "Directeur de la publication",
+          type: "text",
+          admin: { description: "Nom et fonction, affichés dans les mentions légales. Ex. : Prénom NOM, Chargé de communication." },
+        },
       ],
     },
     {

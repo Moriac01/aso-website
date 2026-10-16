@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Send } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 
 import { HoneypotField } from "@/components/HoneypotField";
 import { Button } from "@/components/ui/button";
@@ -278,7 +279,11 @@ export function DonationForm({ methods }: { methods: string[] }) {
           />
           <span>
             J&apos;accepte que ces informations soient utilisées pour vérifier mon don et m&apos;en
-            confirmer la réception.
+            confirmer la réception. Voir notre{" "}
+            <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+              politique de confidentialité
+            </Link>
+            .
           </span>
         </label>
         <FieldError message={errors.consent} />

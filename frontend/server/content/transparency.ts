@@ -20,6 +20,10 @@ export type LegalInfo = {
   registrationDate: string | null;
   registrationAuthority: string | null;
   headOffice: string | null;
+  publicationDirector: string | null;
+  publicEmail: string | null;
+  phone: string | null;
+  address: string | null;
 };
 
 /** Rapports publiés — donc visés par le Commissaire aux comptes (règle imposée par le back-office). */
@@ -60,9 +64,13 @@ const loadLegal = unstable_cache(
       registrationDate: legal.registrationDate ?? null,
       registrationAuthority: legal.registrationAuthority ?? null,
       headOffice: legal.headOffice ?? null,
+      publicationDirector: legal.publicationDirector ?? null,
+      publicEmail: settings.publicEmail ?? null,
+      phone: settings.phone ?? null,
+      address: settings.address ?? null,
     };
   },
-  ["cms-legal"],
+  ["cms-legal-v2"],
   { tags: [CACHE_TAGS.settings], revalidate: CACHE_SECONDS },
 );
 
@@ -72,6 +80,10 @@ const EMPTY_LEGAL: LegalInfo = {
   registrationDate: null,
   registrationAuthority: null,
   headOffice: null,
+  publicationDirector: null,
+  publicEmail: null,
+  phone: null,
+  address: null,
 };
 
 export const getPublishedReports = () => withFallback("rapports financiers", [], loadReports);

@@ -99,6 +99,17 @@ if (!settings.legal?.registrationNumber) {
   log("Identité légale déjà renseignée : ignorée.");
 }
 
+// Directeur de la publication (mentions légales) — le Chargé de communication.
+const legalNow = (await payload.findGlobal({ slug: "site-settings" })).legal;
+if (!legalNow?.publicationDirector) {
+  await payload.updateGlobal({
+    slug: "site-settings",
+    context,
+    data: { legal: { ...legalNow, publicationDirector: "Moriac KPANGAM, Chargé de communication (par intérim)" } },
+  });
+  log("Directeur de la publication renseigné.");
+}
+
 // Moyens de don — Orange Money prévu, à compléter et activer par la Trésorerie.
 const donation = await payload.findGlobal({ slug: "donation-settings" });
 if (!donation.methods?.length) {

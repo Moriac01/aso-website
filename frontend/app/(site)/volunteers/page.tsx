@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { ArrowDown, ArrowRight, CheckCircle2, HandHeart, HeartHandshake, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -423,7 +424,11 @@ export default function VolunteersPage() {
                     className="mt-1 h-4 w-4 rounded border-[#b7c7b9] text-[#0c7af8] focus:ring-[#0c7af8]"
                   />
                   <span>
-                    J&apos;accepte que les informations fournies soient utilisées dans le cadre du traitement de ma demande.
+                    J&apos;accepte que les informations fournies soient utilisées dans le cadre du traitement de ma demande. Voir notre{" "}
+                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+                      politique de confidentialité
+                    </Link>
+                    .
                   </span>
                 </label>
                 <FieldError message={memberErrors.consent} />
@@ -626,7 +631,11 @@ export default function VolunteersPage() {
                     className="mt-1 h-4 w-4 rounded border-[#b7c7b9] text-[#0c7af8] focus:ring-[#0c7af8]"
                   />
                   <span>
-                    J&apos;accepte que les informations fournies soient utilisées dans le cadre du traitement de ma demande.
+                    J&apos;accepte que les informations fournies soient utilisées dans le cadre du traitement de ma demande. Voir notre{" "}
+                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+                      politique de confidentialité
+                    </Link>
+                    .
                   </span>
                 </label>
                 <FieldError message={volunteerErrors.consent} />
