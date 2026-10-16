@@ -9,6 +9,7 @@ import sharp from "sharp";
 
 import { migrations } from "./server/payload/migrations";
 import { Applications } from "./server/payload/collections/Applications";
+import { Donations } from "./server/payload/collections/Donations";
 import { AuditLog } from "./server/payload/collections/AuditLog";
 import { ContactMessages } from "./server/payload/collections/ContactMessages";
 import { FinancialReports } from "./server/payload/collections/FinancialReports";
@@ -16,6 +17,7 @@ import { Media } from "./server/payload/collections/Media";
 import { News } from "./server/payload/collections/News";
 import { TeamMembers } from "./server/payload/collections/TeamMembers";
 import { Users } from "./server/payload/collections/Users";
+import { DonationSettings } from "./server/payload/globals/DonationSettings";
 import { KeyFigures } from "./server/payload/globals/KeyFigures";
 import { SiteSettings } from "./server/payload/globals/SiteSettings";
 
@@ -50,6 +52,7 @@ export default buildConfig({
     Media,
     // Transparence
     FinancialReports,
+    Donations,
     // Demandes reçues
     ContactMessages,
     Applications,
@@ -57,7 +60,7 @@ export default buildConfig({
     Users,
     AuditLog,
   ],
-  globals: [KeyFigures, SiteSettings],
+  globals: [KeyFigures, SiteSettings, DonationSettings],
 
   editor: lexicalEditor(),
   sharp,

@@ -71,6 +71,7 @@ export interface Config {
     'team-members': TeamMember;
     media: Media;
     'financial-reports': FinancialReport;
+    donations: Donation;
     'contact-messages': ContactMessage;
     applications: Application;
     users: User;
@@ -86,6 +87,7 @@ export interface Config {
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'financial-reports': FinancialReportsSelect<false> | FinancialReportsSelect<true>;
+    donations: DonationsSelect<false> | DonationsSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -102,10 +104,12 @@ export interface Config {
   globals: {
     'key-figures': KeyFigure;
     'site-settings': SiteSetting;
+    'donation-settings': DonationSetting;
   };
   globalsSelect: {
     'key-figures': KeyFiguresSelect<false> | KeyFiguresSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'donation-settings': DonationSettingsSelect<false> | DonationSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -281,6 +285,38 @@ export interface FinancialReport {
   focalY?: number | null;
 }
 /**
+ * Vérifiez chaque don sur le relevé Orange Money ou bancaire avant de le passer à « Reçu ».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations".
+ */
+export interface Donation {
+  id: number;
+  /**
+   * Communiquée au donateur.
+   */
+  reference?: string | null;
+  status: 'declared' | 'received' | 'not-found';
+  checkedBy?: string | null;
+  checkedAt?: string | null;
+  amount: number;
+  method: string;
+  transactionRef: string;
+  project: 'general' | 'education' | 'paemv' | 'psychosocial';
+  anonymous?: boolean | null;
+  donorName?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  message?: string | null;
+  consent: boolean;
+  /**
+   * Ex. : reçu le 12/11 sur Orange Money, réf. relevé n° …
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages".
  */
@@ -429,6 +465,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'financial-reports';
         value: number | FinancialReport;
+      } | null)
+    | ({
+        relationTo: 'donations';
+        value: number | Donation;
       } | null)
     | ({
         relationTo: 'contact-messages';
@@ -597,6 +637,29 @@ export interface FinancialReportsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations_select".
+ */
+export interface DonationsSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  checkedBy?: T;
+  checkedAt?: T;
+  amount?: T;
+  method?: T;
+  transactionRef?: T;
+  project?: T;
+  anonymous?: T;
+  donorName?: T;
+  email?: T;
+  phone?: T;
+  message?: T;
+  consent?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -776,6 +839,37 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Seuls les comptes au nom de l’association. Un moyen décoché n’apparaît pas sur le site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-settings".
+ */
+export interface DonationSetting {
+  id: number;
+  methods?:
+    | {
+        /**
+         * Ex. : Orange Money
+         */
+        label: string;
+        kind: 'mobile-money' | 'bank' | 'other';
+        /**
+         * Doit être l’ASO.
+         */
+        accountName?: string | null;
+        accountNumber?: string | null;
+        /**
+         * Les étapes à suivre, en mots simples. Ex. : « Faites un transfert vers ce numéro, puis notez la référence reçue par SMS. »
+         */
+        instructions?: string | null;
+        active?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "key-figures_select".
  */
@@ -818,6 +912,26 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         instagram?: T;
         linkedin?: T;
         whatsapp?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-settings_select".
+ */
+export interface DonationSettingsSelect<T extends boolean = true> {
+  methods?:
+    | T
+    | {
+        label?: T;
+        kind?: T;
+        accountName?: T;
+        accountNumber?: T;
+        instructions?: T;
+        active?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
