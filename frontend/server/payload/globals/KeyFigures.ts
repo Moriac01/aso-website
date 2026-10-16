@@ -1,6 +1,7 @@
 import type { GlobalConfig } from "payload";
 
-import { anyone, isStaff } from "../access";
+import { CONTENT_EDITORS, READERS, allow, anyone, hiddenUnless } from "../access";
+import { auditGlobal } from "../hooks/audit";
 import { CACHE_TAGS } from "@/server/content/tags";
 import { revalidateGlobal } from "../hooks/revalidate";
 
@@ -10,15 +11,16 @@ export const KeyFigures: GlobalConfig = {
   label: "Chiffres clés",
   admin: {
     group: "Contenu",
+    hidden: hiddenUnless(...CONTENT_EDITORS, ...READERS),
     description:
       "Ces chiffres engagent la crédibilité de l'ASO : n'indiquez que des valeurs vérifiables.",
   },
   access: {
     read: anyone,
-    update: isStaff,
+    update: allow(...CONTENT_EDITORS),
   },
   hooks: {
-    afterChange: [revalidateGlobal(CACHE_TAGS.keyFigures)],
+    afterChange: [revalidateGlobal(CACHE_TAGS.keyFigures), auditGlobal("Chiffres clés")],
   },
   fields: [
     {

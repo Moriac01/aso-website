@@ -9,6 +9,7 @@ import sharp from "sharp";
 
 import { migrations } from "./server/payload/migrations";
 import { Applications } from "./server/payload/collections/Applications";
+import { AuditLog } from "./server/payload/collections/AuditLog";
 import { ContactMessages } from "./server/payload/collections/ContactMessages";
 import { FinancialReports } from "./server/payload/collections/FinancialReports";
 import { Media } from "./server/payload/collections/Media";
@@ -51,6 +52,7 @@ export default buildConfig({
     Applications,
     // Administration
     Users,
+    AuditLog,
   ],
   globals: [KeyFigures, SiteSettings],
 

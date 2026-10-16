@@ -74,6 +74,7 @@ export interface Config {
     'contact-messages': ContactMessage;
     applications: Application;
     users: User;
+    'audit-log': AuditLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -241,6 +243,8 @@ export interface TeamMember {
   createdAt: string;
 }
 /**
+ * Circuit de validation : la Trésorerie dépose le rapport, le Commissaire aux comptes le vise, le Président le publie.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "financial-reports".
  */
@@ -256,6 +260,13 @@ export interface FinancialReport {
    * Ce que le lecteur doit retenir en 2-3 phrases.
    */
   summary?: string | null;
+  auditApproved?: boolean | null;
+  auditedBy?: string | null;
+  auditedAt?: string | null;
+  auditComment?: string | null;
+  /**
+   * Possible uniquement après le visa.
+   */
   published?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -324,9 +335,23 @@ export interface User {
   id: number;
   name: string;
   /**
-   * Administrateur : tout gérer, y compris les comptes. Éditeur : contenu et suivi des demandes.
+   * Président — administrateur : Tout, dont la gestion des comptes et la publication des rapports financiers.  ·  Administrateur technique : Maintenance du site : comptes, réglages, contenus. Ne vise ni ne publie les rapports financiers.  ·  Communication : Actualités, équipe, images, chiffres clés.  ·  Secrétariat : Messages de contact et demandes d'adhésion.  ·  Trésorerie : Dépose et met à jour les rapports financiers (sans les publier).  ·  Commissaire aux comptes : Lit tout, journal compris ; seule action : viser les rapports financiers.  ·  Mobilisation : Candidatures bénévoles et demandes d'adhésion.  ·  Consultation : Lecture du contenu, sans accès aux données personnelles.
    */
-  role: 'admin' | 'editor';
+  roles: (
+    'admin' | 'tech' | 'communication' | 'secretariat' | 'tresorerie' | 'controle' | 'mobilisation' | 'consultation'
+  )[];
+  /**
+   * Telle qu’inscrite au procès-verbal. Ex. : Trésorière Générale.
+   */
+  function?: string | null;
+  /**
+   * Décochez pour bloquer l’accès sans supprimer le compte.
+   */
+  active?: boolean | null;
+  /**
+   * Après cette date, la connexion est refusée. Mandat du bureau élu le 24/01/2026 : 3 ans.
+   */
+  mandateEndsAt?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -346,6 +371,24 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Qui a modifié quoi, et quand. Ces entrées ne peuvent être ni modifiées ni supprimées.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log".
+ */
+export interface AuditLog {
+  id: number;
+  action: 'create' | 'update' | 'delete';
+  target: string;
+  documentId?: string | null;
+  label?: string | null;
+  changes?: string | null;
+  user?: (number | null) | User;
+  userName?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -398,6 +441,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'audit-log';
+        value: number | AuditLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -534,6 +581,10 @@ export interface FinancialReportsSelect<T extends boolean = true> {
   year?: T;
   period?: T;
   summary?: T;
+  auditApproved?: T;
+  auditedBy?: T;
+  auditedAt?: T;
+  auditComment?: T;
   published?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -592,7 +643,10 @@ export interface ApplicationsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  role?: T;
+  roles?: T;
+  function?: T;
+  active?: T;
+  mandateEndsAt?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -610,6 +664,21 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log_select".
+ */
+export interface AuditLogSelect<T extends boolean = true> {
+  action?: T;
+  target?: T;
+  documentId?: T;
+  label?: T;
+  changes?: T;
+  user?: T;
+  userName?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

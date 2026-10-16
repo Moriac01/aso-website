@@ -44,16 +44,33 @@ frontend/
   lib/validation/        → schémas Zod partagés front/back (le « contrat »)
 ```
 
-## Contenu du back-office
+## Rôles et responsabilités
 
-| Section | Contenu | Qui peut lire |
+Les rôles suivent les fonctions du Bureau Exécutif (PV de l'Assemblée Générale du 24/01/2026).
+Un compte peut cumuler plusieurs rôles ; chaque personne ne voit dans le menu que ce qui la concerne.
+
+| Rôle | Fonction au PV | Peut faire |
 |---|---|---|
-| Contenu | Actualités (brouillon/publié), Équipe, Images, Chiffres clés | Public (publié seulement) |
-| Transparence | Rapports financiers (PDF) | Public si « Publié sur le site » |
-| Demandes reçues | Messages de contact, Adhésions & bénévolat | Équipe connectée uniquement |
-| Administration | Comptes, Coordonnées & réseaux | Administrateurs |
+| Président — administrateur | Président | Tout ; seul à attribuer le rôle admin ; publie les rapports financiers |
+| Administrateur technique | Vice-Président (développement du site) | Comptes (sauf rôle admin), réglages, contenus ; aucune donnée personnelle |
+| Communication | Chargé de communication (intérim : Vice-Président) | Actualités, équipe, images, chiffres clés |
+| Secrétariat | Secrétaire Générale | Messages de contact, adhésions et bénévolat |
+| Trésorerie | Trésorière Générale | Dépose et met à jour les rapports financiers, sans les publier |
+| Commissaire aux comptes | Commissaire aux Comptes | Lit tout, journal compris ; seule action : viser les rapports |
+| Mobilisation | 1er et 2e Mobilisateurs | Adhésions et bénévolat |
+| Consultation | Conseillers | Lecture du contenu, sans données personnelles |
 
-Rôles : **Administrateur** (tout, y compris les comptes) et **Éditeur** (contenu et suivi des demandes).
+**Rapports financiers, règle des « quatre yeux »** : la Trésorerie dépose → le Commissaire aux
+comptes vise (son nom et la date sont enregistrés) → le Président publie. Publication impossible
+sans visa ; toute modification d'un rapport visé annule le visa et le dépublie.
+
+**Sécurité des comptes** : pas d'inscription publique ; il reste toujours au moins un administrateur
+actif ; 5 échecs de connexion = blocage 15 min ; session de 8 h ; un compte peut être désactivé, et la
+connexion est refusée après la date de fin de mandat (mandat du bureau : 3 ans, jusqu'en janvier 2029).
+
+**Journal des modifications** (Administration → Journal) : chaque création, modification ou
+suppression est enregistrée (qui, quoi, quels champs, quand). Personne ne peut le modifier ni l'effacer.
+Lecture : Président, administrateur technique, Commissaire aux comptes.
 
 ## Affichage sur le site
 

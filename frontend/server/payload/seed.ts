@@ -19,8 +19,8 @@ import config from "../../payload.config";
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.resolve(dirname, "../../public");
 
-/** Pas d'invalidation de cache pendant l'import (on est hors du serveur Next.js). */
-const context = { skipRevalidate: true };
+/** Import initial : pas d’invalidation de cache (hors serveur Next.js) ni d’entrées au journal. */
+const context = { skipRevalidate: true, skipAudit: true };
 
 const categoryMap: Record<string, string> = {
   Éducation: "education",
