@@ -77,6 +77,28 @@ if (!keyFigures.items?.length) {
   log("Chiffres clés déjà renseignés : ignorés.");
 }
 
+// Identité légale — d'après le PV de l'Assemblée Générale du 24/01/2026.
+const settings = await payload.findGlobal({ slug: "site-settings" });
+if (!settings.legal?.registrationNumber) {
+  await payload.updateGlobal({
+    slug: "site-settings",
+    context,
+    data: {
+      legal: {
+        legalName: "Association Soutien aux Orphelins (ASO)",
+        registrationNumber: "283/MATDDL/DIRCAB/DGAT/DAPSE/SASE",
+        registrationDate: "2025-09-12",
+        registrationAuthority:
+          "Ministère de l’Administration du Territoire, de la Décentralisation et du Développement local",
+        headOffice: "Bangui, République centrafricaine",
+      },
+    },
+  });
+  log("Identité légale importée.");
+} else {
+  log("Identité légale déjà renseignée : ignorée.");
+}
+
 // 2. Actualités — avec leurs images.
 const { totalDocs: newsCount } = await payload.count({ collection: "news" });
 if (newsCount === 0) {

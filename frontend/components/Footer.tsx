@@ -6,6 +6,7 @@ const navigation = [
   ["À propos", "/about"],
   ["Actions", "/actions"],
   ["Actualités", "/news"],
+  ["Transparence", "/transparence"],
   ["Devenir membre", "/volunteers"],
   ["Contact", "/contact"],
 ];

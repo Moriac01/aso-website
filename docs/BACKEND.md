@@ -84,6 +84,13 @@ lisent le contenu du back-office via `server/content/` :
 - si la base est injoignable, le site reste en ligne : les sections concernées sont simplement
   masquées et l'erreur est journalisée (`[contenu] … indisponible`).
 
+## Page Transparence (`/transparence`)
+
+Affiche automatiquement les rapports financiers **publiés et visés**, avec la mention du visa
+(nom du Commissaire aux comptes et date) et le lien de téléchargement, ainsi que l'identité
+légale de l'association (Administration → Coordonnées & réseaux → Identité légale).
+Les PDF non publiés restent inaccessibles au public, même avec leur adresse exacte.
+
 ## Formulaires publics
 
 Contact, adhésion et bénévolat passent par des **Server Actions** (`server/actions/forms.ts`) :

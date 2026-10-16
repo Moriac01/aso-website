@@ -13,6 +13,7 @@ const navigation = [
   ["À Propos", "/about"],
   ["Actions", "/actions"],
   ["Actualités", "/news"],
+  ["Transparence", "/transparence"],
   ["Devenir Membres", "/volunteers"],
   ["Contact", "/contact"],
 ];

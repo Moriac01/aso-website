@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 import { APIError, type CollectionConfig } from "payload";
 
 import { allow, allowField, flaggedPublishedOrStaff, hasRole, hiddenUnless, userLabel } from "../access";
+import { CACHE_TAGS } from "@/server/content/tags";
 import { auditAfterChange, auditAfterDelete } from "../hooks/audit";
+import { revalidateAfterChange, revalidateAfterDelete } from "../hooks/revalidate";
 
 /**
  * Rapports financiers (PDF) publiés sur la page Transparence.
@@ -95,8 +97,8 @@ export const FinancialReports: CollectionConfig = {
         return data;
       },
     ],
-    afterChange: [auditAfterChange("Rapport financier")],
-    afterDelete: [auditAfterDelete("Rapport financier")],
+    afterChange: [revalidateAfterChange(CACHE_TAGS.reports), auditAfterChange("Rapport financier")],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.reports), auditAfterDelete("Rapport financier")],
   },
   fields: [
     {

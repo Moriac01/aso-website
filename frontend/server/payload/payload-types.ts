@@ -756,6 +756,16 @@ export interface SiteSetting {
   publicEmail?: string | null;
   phone?: string | null;
   address?: string | null;
+  /**
+   * Affichée sur la page Transparence et dans le pied de page.
+   */
+  legal?: {
+    legalName?: string | null;
+    registrationNumber?: string | null;
+    registrationDate?: string | null;
+    registrationAuthority?: string | null;
+    headOffice?: string | null;
+  };
   socials?: {
     facebook?: string | null;
     instagram?: string | null;
@@ -792,6 +802,15 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   publicEmail?: T;
   phone?: T;
   address?: T;
+  legal?:
+    | T
+    | {
+        legalName?: T;
+        registrationNumber?: T;
+        registrationDate?: T;
+        registrationAuthority?: T;
+        headOffice?: T;
+      };
   socials?:
     | T
     | {
