@@ -6,7 +6,9 @@ import { ArrowDown, ArrowRight, CheckCircle2, HandHeart, HeartHandshake, UserRou
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { EngagementType, MemberFormValues, VolunteerFormValues } from "@/app/volunteers/types";
+import { HoneypotField } from "@/components/HoneypotField";
+import { submitMemberApplication, submitVolunteerApplication } from "@/server/actions/forms";
+import type { EngagementType, MemberFormValues, VolunteerFormValues } from "@/app/(site)/volunteers/types";
 
 const memberInitialValues: MemberFormValues = {
   firstName: "",
@@ -66,6 +68,9 @@ export default function VolunteersPage() {
   const [volunteerErrors, setVolunteerErrors] = useState<Partial<Record<keyof VolunteerFormValues, string>>>({});
   const [memberSubmitted, setMemberSubmitted] = useState(false);
   const [volunteerSubmitted, setVolunteerSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   const activeCardClass = useMemo(
     () =>
@@ -129,18 +134,42 @@ export default function VolunteersPage() {
     return Object.keys(errors).length === 0;
   };
 
-  const onMemberSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onMemberSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError(null);
 
     if (!validateMemberForm()) return;
+
+    setIsSending(true);
+    const result = await submitMemberApplication({ ...memberForm, website: honeypot });
+    setIsSending(false);
+
+    if (!result.ok) {
+      setMemberErrors((result.fieldErrors ?? {}) as Partial<Record<keyof MemberFormValues, string>>);
+      setSubmitError(result.error);
+      return;
+    }
+
     setMemberSubmitted(true);
     setMemberForm(memberInitialValues);
   };
 
-  const onVolunteerSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onVolunteerSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError(null);
 
     if (!validateVolunteerForm()) return;
+
+    setIsSending(true);
+    const result = await submitVolunteerApplication({ ...volunteerForm, website: honeypot });
+    setIsSending(false);
+
+    if (!result.ok) {
+      setVolunteerErrors((result.fieldErrors ?? {}) as Partial<Record<keyof VolunteerFormValues, string>>);
+      setSubmitError(result.error);
+      return;
+    }
+
     setVolunteerSubmitted(true);
     setVolunteerForm(volunteerInitialValues);
   };
@@ -274,6 +303,7 @@ export default function VolunteersPage() {
             </div>
 
             <form onSubmit={onMemberSubmit} className="space-y-6" noValidate>
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <div className="grid gap-5 md:grid-cols-2">
                 <div>
                   <label htmlFor="member-firstName" className="mb-2 block text-sm font-medium text-[#070707]">
@@ -408,9 +438,15 @@ export default function VolunteersPage() {
                 </div>
               ) : null}
 
+              {submitError ? (
+                <p role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  {submitError}
+                </p>
+              ) : null}
+
               <div className="flex justify-end">
-                <Button type="submit" className="rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a67d0]">
-                  Envoyer ma demande
+                <Button type="submit" disabled={isSending} className="rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a67d0]">
+                  {isSending ? "Envoi en cours…" : "Envoyer ma demande"}
                   <ArrowRight className="ml-2 size-4" />
                 </Button>
               </div>
@@ -428,6 +464,7 @@ export default function VolunteersPage() {
             </div>
 
             <form onSubmit={onVolunteerSubmit} className="space-y-6" noValidate>
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <div className="grid gap-5 md:grid-cols-2">
                 <div>
                   <label htmlFor="volunteer-firstName" className="mb-2 block text-sm font-medium text-[#070707]">
@@ -604,9 +641,15 @@ export default function VolunteersPage() {
                 </div>
               ) : null}
 
+              {submitError ? (
+                <p role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  {submitError}
+                </p>
+              ) : null}
+
               <div className="flex justify-end">
-                <Button type="submit" className="rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a67d0]">
-                  Envoyer ma demande
+                <Button type="submit" disabled={isSending} className="rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a67d0]">
+                  {isSending ? "Envoi en cours…" : "Envoyer ma demande"}
                   <ArrowRight className="ml-2 size-4" />
                 </Button>
               </div>
