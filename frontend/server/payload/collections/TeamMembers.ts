@@ -1,6 +1,8 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isStaff } from "../access";
+import { CACHE_TAGS } from "@/server/content/tags";
+import { revalidateAfterChange, revalidateAfterDelete } from "../hooks/revalidate";
 
 export const TeamMembers: CollectionConfig = {
   slug: "team-members",
@@ -17,6 +19,10 @@ export const TeamMembers: CollectionConfig = {
     delete: isStaff,
   },
   defaultSort: "order",
+  hooks: {
+    afterChange: [revalidateAfterChange(CACHE_TAGS.team)],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.team)],
+  },
   fields: [
     { name: "name", label: "Nom", type: "text", required: true },
     { name: "role", label: "Fonction", type: "text", required: true },

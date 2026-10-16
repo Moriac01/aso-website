@@ -1,10 +1,27 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { NewsDetail } from "@/components/news/NewsDetail";
 import { getNewsBySlug, getPublishedNews } from "@/services/news";
 
-export function generateStaticParams() {
-  return getPublishedNews().map((item) => ({ slug: item.slug }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  return (await getPublishedNews()).map((item) => ({ slug: item.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const item = await getNewsBySlug((await params).slug);
+  if (!item) return { title: "Actualité introuvable — ASO" };
+  return {
+    title: `${item.title} — ASO`,
+    description: item.excerpt,
+    openGraph: { title: item.title, description: item.excerpt, images: [item.image] },
+  };
 }
 
 export default async function NewsDetailPage({
@@ -13,7 +30,7 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const item = getNewsBySlug(slug);
+  const item = await getNewsBySlug(slug);
 
   if (!item) {
     return (

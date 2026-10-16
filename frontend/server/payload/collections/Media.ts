@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 import type { CollectionConfig } from "payload";
 
 import { anyone, isStaff } from "../access";
+import { CACHE_TAGS } from "@/server/content/tags";
+import { revalidateAfterChange, revalidateAfterDelete } from "../hooks/revalidate";
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -30,6 +32,11 @@ export const Media: CollectionConfig = {
     ],
     adminThumbnail: "thumbnail",
     focalPoint: true,
+  },
+  hooks: {
+    // Une image remplacée doit apparaître partout où elle est utilisée.
+    afterChange: [revalidateAfterChange(CACHE_TAGS.news, CACHE_TAGS.team)],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.news, CACHE_TAGS.team)],
   },
   fields: [
     {

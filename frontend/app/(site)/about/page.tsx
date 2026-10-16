@@ -1,10 +1,10 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
 
 import { PersonCard } from "@/components/PersonCard";
-import { people } from "@/app/(site)/about/data";
+import { AboutAccordion } from "@/app/(site)/about/AboutAccordion";
+import { getTeam } from "@/server/content/team";
+
+export const revalidate = 300;
 
 const values = [
   {
@@ -25,26 +25,10 @@ const values = [
   },
 ];
 
-const sections = [
-  {
-    title: "Notre vision",
-    content:
-      "L’association Soutien aux Orphelins aspire à un avenir où chaque enfant orphelin peut grandir dans la sécurité, la confiance et l’espoir. Nous croyons que chacun mérite une chance d’apprendre, de guérir et de s’épanouir pleinement.",
-  },
-  {
-    title: "Nos valeurs",
-    content:
-      "Nos actions sont guidées par la compassion, l’intégrité, la responsabilité et le respect de la dignité humaine. Ces principes orientent chaque intervention afin d’assurer un accompagnement juste, humain et durable.",
-  },
-  {
-    title: "Nos engagements",
-    content:
-      "Nous nous engageons à améliorer la qualité de vie des enfants orphelins en leur offrant un accès équitable à l’éducation, aux soins de santé, au soutien psychologique, à une alimentation suffisante et à des conditions de vie plus sûres.",
-  },
-];
-
-export default function APropos() {
-  const [openSection, setOpenSection] = useState<number>(0);
+export default async function APropos() {
+  const people = await getTeam();
+  const executives = people.filter((person) => person.type === "executive");
+  const community = people.filter((person) => person.type !== "executive");
 
   return (
     <main className="bg-[#f7faf6] text-[#070707]">
@@ -137,37 +121,9 @@ export default function APropos() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <div className="overflow-hidden rounded-3xl border border-[#dfe7df] bg-white shadow-sm">
-          {sections.map((section, index) => {
-            const isOpen = index === openSection;
+      <AboutAccordion />
 
-            return (
-              <div key={section.title} className={index < sections.length - 1 ? "border-b border-[#edf2ef]" : ""}>
-                <button
-                  type="button"
-                  onClick={() => setOpenSection(isOpen ? -1 : index)}
-                  className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6"
-                >
-                  <span className="text-lg font-semibold text-[#070707] sm:text-xl">
-                    {section.title}
-                  </span>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf6ff] text-2xl font-light text-[#0c7af8]">
-                    {isOpen ? "−" : "+"}
-                  </span>
-                </button>
-
-                {isOpen && (
-                  <div className="px-5 pb-6 text-[#526057] sm:px-6 sm:pb-7">
-                    <p className="text-base leading-8">{section.content}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
+      {executives.length > 0 && (
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="mb-8 max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
@@ -179,14 +135,14 @@ export default function APropos() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {people
-            .filter((person) => person.type === "executive")
-            .map((person) => (
-              <PersonCard key={person.id} person={person} />
-            ))}
+          {executives.map((person) => (
+            <PersonCard key={person.id} person={person} />
+          ))}
         </div>
       </section>
+      )}
 
+      {community.length > 0 && (
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="mb-8 max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
@@ -198,13 +154,12 @@ export default function APropos() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {people
-            .filter((person) => person.type !== "executive")
-            .map((person) => (
-              <PersonCard key={person.id} person={person} />
-            ))}
+          {community.map((person) => (
+            <PersonCard key={person.id} person={person} />
+          ))}
         </div>
       </section>
+      )}
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="rounded-[2rem] border border-[#dfe7df] bg-[#eef7ff] p-8 text-center shadow-sm sm:p-12">
