@@ -4,6 +4,16 @@ import config from "@payload-config";
 import { getPayload, type Payload } from "payload";
 
 import {
+  acknowledgement,
+  applicationAlert,
+  contactAlert,
+  donationAlert,
+  donationDeclared,
+} from "@/server/email/messages";
+import { sendLater, sendSafely, teamRecipients } from "@/server/email/send";
+import type { Role } from "@/server/payload/roles";
+
+import {
   contactSchema,
   memberSchema,
   toFieldErrors,
@@ -44,19 +54,24 @@ const isBot = (input: unknown) =>
   typeof (input as { website?: unknown }).website === "string" &&
   (input as { website: string }).website.length > 0;
 
-async function notifyTeam(payload: Payload, subject: string, lines: string[]) {
-  try {
-    const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
-    if (!settings.notificationEmail) return;
-    await payload.sendEmail({
-      to: settings.notificationEmail,
-      subject: `[Site ASO] ${subject}`,
-      text: [...lines, "", "À traiter dans le back-office : /admin"].join("\n"),
-    });
-  } catch (error) {
-    // La demande est déjà enregistrée : un échec d'email ne doit pas faire échouer l'envoi.
-    payload.logger.error({ err: error }, "Notification email non envoyée");
-  }
+/**
+ * Emails envoyés APRÈS la réponse au visiteur (fonction `after` de Next.js) :
+ * le formulaire répond tout de suite, même si le serveur d'email est lent.
+ */
+function emailTeamAndSender(
+  payload: Payload,
+  roles: Role[],
+  alert: { subject: string; html: string; text: string; replyTo?: string },
+  sender?: { to: string; subject: string; html: string; text: string },
+) {
+  sendLater(async () => {
+    try {
+      await sendSafely(payload, { ...alert, to: await teamRecipients(payload, roles) });
+    } catch (error) {
+      payload.logger.error({ err: error }, "Destinataires de l'alerte introuvables");
+    }
+    if (sender) await sendSafely(payload, sender);
+  });
 }
 
 export async function submitContactMessage(input: unknown): Promise<FormResult> {
@@ -69,16 +84,17 @@ export async function submitContactMessage(input: unknown): Promise<FormResult> 
 
   try {
     const payload = await getPayload({ config });
-    await payload.create({
+    const doc = await payload.create({
       collection: "contact-messages",
       data: { ...data, status: "new" },
       overrideAccess: true, // la collection refuse toute création via l'API publique
     });
-    await notifyTeam(payload, `Nouveau message : ${data.subject}`, [
-      `De : ${data.name} <${data.email}>${data.phone ? ` · ${data.phone}` : ""}`,
-      "",
-      data.message,
-    ]);
+    emailTeamAndSender(
+      payload,
+      ["secretariat"],
+      { ...contactAlert({ ...data, id: doc.id }), replyTo: data.email },
+      { to: data.email, ...acknowledgement("contact") },
+    );
     return { ok: true };
   } catch (error) {
     console.error("submitContactMessage", error);
@@ -96,17 +112,26 @@ export async function submitMemberApplication(input: unknown): Promise<FormResul
 
   try {
     const payload = await getPayload({ config });
-    await payload.create({
+    const doc = await payload.create({
       collection: "applications",
       data: { ...data, type: "member", status: "new" },
       overrideAccess: true,
     });
-    await notifyTeam(payload, `Demande d’adhésion : ${data.firstName} ${data.lastName}`, [
-      `${data.firstName} ${data.lastName} <${data.email}> · ${data.phone} · ${data.city}`,
-      `Profession : ${data.profession}`,
-      "",
-      data.motivation,
-    ]);
+    emailTeamAndSender(
+      payload,
+      ["secretariat", "mobilisation"],
+      {
+        ...applicationAlert({
+          ...data,
+          id: doc.id,
+          type: "member",
+          details: [["Profession", data.profession]],
+          text: data.motivation,
+        }),
+        replyTo: data.email,
+      },
+      { to: data.email, ...acknowledgement("member") },
+    );
     return { ok: true };
   } catch (error) {
     console.error("submitMemberApplication", error);
@@ -124,18 +149,30 @@ export async function submitVolunteerApplication(input: unknown): Promise<FormRe
 
   try {
     const payload = await getPayload({ config });
-    await payload.create({
+    const doc = await payload.create({
       collection: "applications",
       data: { ...data, type: "volunteer", status: "new" },
       overrideAccess: true,
     });
-    await notifyTeam(payload, `Candidature bénévole : ${data.firstName} ${data.lastName}`, [
-      `${data.firstName} ${data.lastName} <${data.email}> · ${data.phone} · ${data.city}`,
-      `Compétences : ${data.skills}`,
-      `Disponibilité : ${data.availability} · Aide : ${data.helpType}`,
-      "",
-      data.message,
-    ]);
+    emailTeamAndSender(
+      payload,
+      ["mobilisation", "secretariat"],
+      {
+        ...applicationAlert({
+          ...data,
+          id: doc.id,
+          type: "volunteer",
+          details: [
+            ["Compétences", data.skills],
+            ["Disponibilité", data.availability],
+            ["Type d’aide", data.helpType],
+          ],
+          text: data.message,
+        }),
+        replyTo: data.email,
+      },
+      { to: data.email, ...acknowledgement("volunteer") },
+    );
     return { ok: true };
   } catch (error) {
     console.error("submitVolunteerApplication", error);
@@ -165,14 +202,21 @@ export async function submitDonation(input: unknown): Promise<DonationResult> {
     });
     const reference = doc.reference ?? "";
     const project = donationProjects.find((p) => p.value === data.project)?.label ?? data.project;
-    await notifyTeam(payload, `Don déclaré : ${data.amount.toLocaleString("fr-FR")} FCFA (${reference})`, [
-      `Montant : ${data.amount.toLocaleString("fr-FR")} FCFA via ${data.method}`,
-      `Référence de la transaction : ${data.transactionRef}`,
-      `Projet : ${project}`,
-      `Donateur : ${data.anonymous ? "anonyme" : data.donorName}${data.phone ? ` · ${data.phone}` : ""}${data.email ? ` · ${data.email}` : ""}`,
-      "",
-      "À vérifier sur le relevé avant de passer le don à « Reçu ».",
-    ]);
+    emailTeamAndSender(
+      payload,
+      ["tresorerie"],
+      donationAlert({
+        id: doc.id,
+        reference,
+        amount: data.amount,
+        method: data.method,
+        transactionRef: data.transactionRef,
+        project,
+        donor: data.anonymous ? "Anonyme" : data.donorName,
+        contact: [data.phone, data.email].filter(Boolean).join(" · "),
+      }),
+      data.email ? { to: data.email, ...donationDeclared({ reference, amount: data.amount, project }) } : undefined,
+    );
     return { ok: true, reference };
   } catch (error) {
     console.error("submitDonation", error);

@@ -1,11 +1,13 @@
 import type { CollectionConfig } from "payload";
 
 import { donationProjects, newDonationReference } from "@/lib/validation/donation";
+import { donationReceived } from "@/server/email/messages";
+import { sendLater, sendSafely } from "@/server/email/send";
 
 import { allow, allowField, hiddenUnless, nobody, userLabel } from "../access";
 import { auditAfterChange, auditAfterDelete } from "../hooks/audit";
 
-type DonationDoc = { reference?: string; status?: string };
+type DonationDoc = { reference?: string; status?: string; email?: string | null; amount?: number; project?: string };
 
 /**
  * Les informations déclarées par le donateur sont figées : personne, pas même
@@ -58,6 +60,19 @@ export const Donations: CollectionConfig = {
         args.operation === "update"
           ? auditAfterChange("Don", (doc) => doc.reference)(args)
           : args.doc,
+      // Le donateur qui a laissé son email est prévenu quand la Trésorerie confirme la réception.
+      async ({ doc, previousDoc, operation, req }) => {
+        const after = doc as DonationDoc;
+        const before = (previousDoc ?? {}) as DonationDoc;
+        if (operation !== "update" || after.status !== "received" || before.status === "received" || !after.email) {
+          return doc;
+        }
+        const project = donationProjects.find((p) => p.value === after.project)?.label ?? donationProjects[0].label;
+        const message = donationReceived({ reference: after.reference ?? "", amount: after.amount ?? 0, project });
+        const to = after.email;
+        sendLater(() => sendSafely(req.payload, { to, ...message }));
+        return doc;
+      },
     ],
     afterDelete: [auditAfterDelete("Don", (doc) => doc.reference)],
   },

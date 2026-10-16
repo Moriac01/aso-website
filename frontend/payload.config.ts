@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { fr } from "@payloadcms/translations/languages/fr";
 import { buildConfig } from "payload";
@@ -23,6 +24,31 @@ import { SiteSettings } from "./server/payload/globals/SiteSettings";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+
+/**
+ * Envoi des emails par SMTP (par défaut : le compte Gmail de l'ASO).
+ * Sans SMTP_USER / SMTP_PASS, aucun email n'est envoyé : Payload les affiche
+ * seulement dans la console (pratique en développement).
+ * Pour passer plus tard à un autre service (Resend, Brevo…), il suffit de
+ * changer les variables SMTP_* et EMAIL_FROM, sans toucher au code.
+ */
+const smtpPort = Number(process.env.SMTP_PORT || 465);
+const email =
+  process.env.SMTP_USER && process.env.SMTP_PASS
+    ? nodemailerAdapter({
+        defaultFromAddress: process.env.EMAIL_FROM || process.env.SMTP_USER,
+        defaultFromName: process.env.EMAIL_FROM_NAME || "ASO — Soutien aux Orphelins",
+        // Pas de connexion au serveur d'email au démarrage ni pendant le build :
+        // une erreur éventuelle est journalisée au moment de l'envoi.
+        skipVerify: true,
+        transportOptions: {
+          host: process.env.SMTP_HOST || "smtp.gmail.com",
+          port: smtpPort,
+          secure: smtpPort === 465,
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+        },
+      })
+    : undefined;
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || "",
@@ -64,6 +90,7 @@ export default buildConfig({
 
   editor: lexicalEditor(),
   sharp,
+  email,
 
   // L'API REST suffit ; GraphQL désactivé pour réduire la surface d'attaque.
   graphQL: { disable: true },
