@@ -134,6 +134,15 @@ Si vous ajoutez un composant personnalisé dans l'admin : `bun run generate:impo
 
 ## Dépannage
 
+**`git switch` refuse : « Your local changes to … payload-types.ts would be overwritten »**
+Ce fichier est généré. Écartez la copie locale puis changez de branche :
+
+```bash
+git restore frontend/server/payload/payload-types.ts
+```
+
+Depuis cette version, `bun dev` ne le régénère plus : seulement `bun run generate:types`.
+
 **« It looks like you've run Payload in dev mode… Would you like to proceed? »**
 La base a été modifiée « à la volée » par une ancienne version du projet. Répondez `N`, puis
 dans Neon → *SQL Editor* (sur la bonne branche) exécutez :
