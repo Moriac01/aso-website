@@ -111,6 +111,13 @@ modifier après coup. Lecture : Président, Trésorerie, Commissaire aux comptes
 **au nom de l'association**, cocher « Afficher sur le site ». Tant qu'aucun moyen n'est actif,
 la page affiche un message d'attente et pas de formulaire.
 
+## Coordonnées (page Contact et pied de page)
+
+La page Contact (téléphone, email, adresse, itinéraire, réseaux sociaux) et le pied de page
+lisent Administration → Coordonnées & réseaux (`server/content/contact.ts`). Ce qui est vide
+n'est pas affiché ; sans adresse saisie, le siège social de l'identité légale est utilisé.
+Un numéro à 8 chiffres est composé avec l'indicatif +236 ; pour WhatsApp, le numéro suffit.
+
 ## Mentions légales et confidentialité
 
 `/mentions-legales` et `/confidentialite` reprennent automatiquement l'identité légale, le
@@ -229,7 +236,7 @@ puis relancez `bun run migrate`.
 - **Limiter le nombre d'envois par visiteur** (anti-abus des formulaires) une fois l'hébergeur
   choisi (ex. règle de pare-feu Vercel).
 - Brancher les autres contenus encore écrits en dur (page Actions, chiffres de la page
-  À propos, coordonnées du pied de page) sur le back-office.
+  À propos) sur le back-office.
 - Base Neon de production distincte de la base de développement.
 - Suppression automatique des données au-delà des durées annoncées dans la politique de
   confidentialité (tâche planifiée).

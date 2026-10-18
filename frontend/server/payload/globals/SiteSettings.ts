@@ -27,9 +27,24 @@ export const SiteSettings: GlobalConfig = {
         read: ({ req }) => Boolean(req.user),
       },
     },
-    { name: "publicEmail", label: "Email public", type: "email" },
-    { name: "phone", label: "Téléphone", type: "text" },
-    { name: "address", label: "Adresse", type: "textarea" },
+    {
+      name: "publicEmail",
+      label: "Email public",
+      type: "email",
+      admin: { description: "Affiché sur la page Contact, dans le pied de page et les pages légales." },
+    },
+    {
+      name: "phone",
+      label: "Téléphone",
+      type: "text",
+      admin: { description: "Format international conseillé, pour les appels de l’étranger : +236 70 00 00 00" },
+    },
+    {
+      name: "address",
+      label: "Adresse",
+      type: "textarea",
+      admin: { description: "Adresse du siège, telle qu’on la donne à un visiteur. Vide : le siège social de l’identité légale est affiché." },
+    },
     {
       name: "legal",
       label: "Identité légale",
@@ -53,6 +68,10 @@ export const SiteSettings: GlobalConfig = {
       name: "socials",
       label: "Réseaux sociaux",
       type: "group",
+      admin: {
+        description:
+          "Adresse complète de chaque page (https://…). Pour WhatsApp, le numéro suffit. Un réseau laissé vide n’est pas affiché sur le site.",
+      },
       fields: [
         { name: "facebook", label: "Facebook", type: "text" },
         { name: "instagram", label: "Instagram", type: "text" },

@@ -110,6 +110,13 @@ if (!legalNow?.publicationDirector) {
   log("Directeur de la publication renseigné.");
 }
 
+// Email public : la boîte Gmail officielle de l'ASO (modifiable dans Coordonnées & réseaux).
+const contactNow = await payload.findGlobal({ slug: "site-settings" });
+if (!contactNow.publicEmail) {
+  await payload.updateGlobal({ slug: "site-settings", context, data: { publicEmail: "contact.aso236@gmail.com" } });
+  log("Email public renseigné.");
+}
+
 // Moyens de don — Orange Money prévu, à compléter et activer par la Trésorerie.
 const donation = await payload.findGlobal({ slug: "donation-settings" });
 if (!donation.methods?.length) {
