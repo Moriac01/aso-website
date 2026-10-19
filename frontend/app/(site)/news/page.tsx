@@ -3,8 +3,10 @@ import Link from "next/link";
 import { NewsList } from "@/components/news/NewsList";
 import { getPublishedNews } from "@/services/news";
 
-export default function NewsPage() {
-  const items = getPublishedNews();
+export const revalidate = 300;
+
+export default async function NewsPage() {
+  const items = await getPublishedNews();
 
   return (
     <main className="bg-[#f7faf6] text-[#070707]">

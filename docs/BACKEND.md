@@ -20,6 +20,7 @@ Le backend vit **dans la même application Next.js** que le site, grâce à
    ```bash
    bun install
    bun run migrate     # crée les tables dans la base
+   bun run seed        # (facultatif) contenu de départ : actualités, équipe, chiffres clés
    bun dev
    ```
 4. Ouvrez http://localhost:3000/admin et créez le **premier compte** : il devient
@@ -54,6 +55,18 @@ frontend/
 
 Rôles : **Administrateur** (tout, y compris les comptes) et **Éditeur** (contenu et suivi des demandes).
 
+## Affichage sur le site
+
+Les pages Accueil (chiffres clés, actualités à la une), Actualités et À propos (équipe)
+lisent le contenu du back-office via `server/content/` :
+
+- le contenu est mis en cache ; **quand l'équipe publie ou modifie** une actualité, un membre,
+  une image ou les chiffres clés, le cache est invalidé et le site affiche la nouvelle version
+  au prochain chargement de la page (pas de redéploiement) ;
+- les **brouillons** ne sont jamais affichés ;
+- si la base est injoignable, le site reste en ligne : les sections concernées sont simplement
+  masquées et l'erreur est journalisée (`[contenu] … indisponible`).
+
 ## Formulaires publics
 
 Contact, adhésion et bénévolat passent par des **Server Actions** (`server/actions/forms.ts`) :
@@ -68,6 +81,9 @@ Les collections de demandes refusent toute création via l'API publique : seules
 Server Actions peuvent écrire.
 
 ## Modifier le schéma de données
+
+`bun dev` **ne modifie jamais** la structure de la base (`push: false`) : tout passe par des
+migrations versionnées, identiques chez chaque développeur et en production.
 
 Après avoir modifié une collection :
 
@@ -90,6 +106,19 @@ Si vous ajoutez un composant personnalisé dans l'admin : `bun run generate:impo
 | `bun run build` | Build de production |
 | `bun run lint` / `bun run typecheck` | Vérifications |
 | `bun run migrate` | Appliquer les migrations |
+| `bun run seed` | Importer le contenu de départ (ignore ce qui existe déjà) |
+
+## Dépannage
+
+**« It looks like you've run Payload in dev mode… Would you like to proceed? »**
+La base a été modifiée « à la volée » par une ancienne version du projet. Répondez `N`, puis
+dans Neon → *SQL Editor* (sur la bonne branche) exécutez :
+
+```sql
+DELETE FROM payload_migrations WHERE batch = -1;
+```
+
+puis relancez `bun run migrate`.
 
 ## À faire avant la mise en production
 
@@ -97,8 +126,8 @@ Si vous ajoutez un composant personnalisé dans l'admin : `bun run generate:impo
   (`frontend/uploads/`, ignoré par Git). Sur Vercel, le disque n'est pas persistant :
   il faudra un stockage objet (ex. Vercel Blob ou S3) via un plugin Payload.
 - **Service d'email** (ex. Resend) pour les notifications.
-- **Afficher le contenu du back-office sur les pages publiques** (actualités, équipe,
-  chiffres clés) à la place des données écrites en dur dans `data/` et `app/(site)/about/data.ts`.
+- Brancher les autres contenus encore écrits en dur (page Actions, chiffres de la page
+  À propos, coordonnées du pied de page) sur le back-office.
 - Base Neon de production distincte de la base de développement.
 
 ## Protection des données

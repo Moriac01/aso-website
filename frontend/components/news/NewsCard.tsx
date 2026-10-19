@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { News } from "@/data/news";
+import type { NewsItem } from "@/services/news";
 
 const formatDate = (date: string) =>
   new Date(date).toLocaleDateString("fr-FR", {
@@ -10,13 +10,13 @@ const formatDate = (date: string) =>
     year: "numeric",
   });
 
-export function NewsCard({ item }: { item: News }) {
+export function NewsCard({ item }: { item: NewsItem }) {
   return (
     <article className="group overflow-hidden rounded-[1.75rem] border border-[#dfe7df] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.04)] transition duration-200 hover:-translate-y-1 hover:shadow-md">
       <div className="overflow-hidden">
         <Image
           src={item.image}
-          alt={item.title}
+          alt={item.imageAlt}
           width={800}
           height={520}
           className="h-56 w-full object-cover transition duration-500 group-hover:scale-105"
