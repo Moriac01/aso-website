@@ -33,15 +33,19 @@ const siteOrigin = (() => {
   }
 })();
 
+/** URL relative quand le fichier est servi par ce site (compatible next/image). */
+export function localUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  return siteOrigin && url.startsWith(siteOrigin) ? url.slice(siteOrigin.length) : url;
+}
+
 /** URL d'une image du back-office, relative quand elle est servie par ce site (compatible next/image). */
 export function mediaUrl(
   media: number | Media | null | undefined,
   size?: keyof NonNullable<Media["sizes"]>,
 ): string | null {
   if (!media || typeof media === "number") return null;
-  const url = (size && media.sizes?.[size]?.url) || media.url;
-  if (!url) return null;
-  return siteOrigin && url.startsWith(siteOrigin) ? url.slice(siteOrigin.length) : url;
+  return localUrl((size && media.sizes?.[size]?.url) || media.url);
 }
 
 export function mediaAlt(media: number | Media | null | undefined, fallback: string): string {

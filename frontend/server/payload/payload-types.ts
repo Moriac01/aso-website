@@ -71,9 +71,11 @@ export interface Config {
     'team-members': TeamMember;
     media: Media;
     'financial-reports': FinancialReport;
+    donations: Donation;
     'contact-messages': ContactMessage;
     applications: Application;
     users: User;
+    'audit-log': AuditLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -85,9 +87,11 @@ export interface Config {
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'financial-reports': FinancialReportsSelect<false> | FinancialReportsSelect<true>;
+    donations: DonationsSelect<false> | DonationsSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'audit-log': AuditLogSelect<false> | AuditLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -100,10 +104,12 @@ export interface Config {
   globals: {
     'key-figures': KeyFigure;
     'site-settings': SiteSetting;
+    'donation-settings': DonationSetting;
   };
   globalsSelect: {
     'key-figures': KeyFiguresSelect<false> | KeyFiguresSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'donation-settings': DonationSettingsSelect<false> | DonationSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -241,6 +247,8 @@ export interface TeamMember {
   createdAt: string;
 }
 /**
+ * Circuit de validation : la Trésorerie dépose le rapport, le Commissaire aux comptes le vise, le Président le publie.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "financial-reports".
  */
@@ -256,6 +264,13 @@ export interface FinancialReport {
    * Ce que le lecteur doit retenir en 2-3 phrases.
    */
   summary?: string | null;
+  auditApproved?: boolean | null;
+  auditedBy?: string | null;
+  auditedAt?: string | null;
+  auditComment?: string | null;
+  /**
+   * Possible uniquement après le visa.
+   */
   published?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -268,6 +283,38 @@ export interface FinancialReport {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * Vérifiez chaque don sur le relevé Orange Money ou bancaire avant de le passer à « Reçu ».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations".
+ */
+export interface Donation {
+  id: number;
+  /**
+   * Communiquée au donateur.
+   */
+  reference?: string | null;
+  status: 'declared' | 'received' | 'not-found';
+  checkedBy?: string | null;
+  checkedAt?: string | null;
+  amount: number;
+  method: string;
+  transactionRef: string;
+  project: 'general' | 'education' | 'paemv' | 'psychosocial';
+  anonymous?: boolean | null;
+  donorName?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  message?: string | null;
+  consent: boolean;
+  /**
+   * Ex. : reçu le 12/11 sur Orange Money, réf. relevé n° …
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -324,9 +371,23 @@ export interface User {
   id: number;
   name: string;
   /**
-   * Administrateur : tout gérer, y compris les comptes. Éditeur : contenu et suivi des demandes.
+   * Président — administrateur : Tout, dont la gestion des comptes et la publication des rapports financiers.  ·  Administrateur technique : Maintenance du site : comptes, réglages, contenus. Ne vise ni ne publie les rapports financiers.  ·  Communication : Actualités, équipe, images, chiffres clés.  ·  Secrétariat : Messages de contact et demandes d'adhésion.  ·  Trésorerie : Dépose et met à jour les rapports financiers (sans les publier).  ·  Commissaire aux comptes : Lit tout, journal compris ; seule action : viser les rapports financiers.  ·  Mobilisation : Candidatures bénévoles et demandes d'adhésion.  ·  Consultation : Lecture du contenu, sans accès aux données personnelles.
    */
-  role: 'admin' | 'editor';
+  roles: (
+    'admin' | 'tech' | 'communication' | 'secretariat' | 'tresorerie' | 'controle' | 'mobilisation' | 'consultation'
+  )[];
+  /**
+   * Telle qu’inscrite au procès-verbal. Ex. : Trésorière Générale.
+   */
+  function?: string | null;
+  /**
+   * Décochez pour bloquer l’accès sans supprimer le compte.
+   */
+  active?: boolean | null;
+  /**
+   * Après cette date, la connexion est refusée. Mandat du bureau élu le 24/01/2026 : 3 ans.
+   */
+  mandateEndsAt?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -346,6 +407,24 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Qui a modifié quoi, et quand. Ces entrées ne peuvent être ni modifiées ni supprimées.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log".
+ */
+export interface AuditLog {
+  id: number;
+  action: 'create' | 'update' | 'delete';
+  target: string;
+  documentId?: string | null;
+  label?: string | null;
+  changes?: string | null;
+  user?: (number | null) | User;
+  userName?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -388,6 +467,10 @@ export interface PayloadLockedDocument {
         value: number | FinancialReport;
       } | null)
     | ({
+        relationTo: 'donations';
+        value: number | Donation;
+      } | null)
+    | ({
         relationTo: 'contact-messages';
         value: number | ContactMessage;
       } | null)
@@ -398,6 +481,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'audit-log';
+        value: number | AuditLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -534,6 +621,10 @@ export interface FinancialReportsSelect<T extends boolean = true> {
   year?: T;
   period?: T;
   summary?: T;
+  auditApproved?: T;
+  auditedBy?: T;
+  auditedAt?: T;
+  auditComment?: T;
   published?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -546,6 +637,29 @@ export interface FinancialReportsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations_select".
+ */
+export interface DonationsSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  checkedBy?: T;
+  checkedAt?: T;
+  amount?: T;
+  method?: T;
+  transactionRef?: T;
+  project?: T;
+  anonymous?: T;
+  donorName?: T;
+  email?: T;
+  phone?: T;
+  message?: T;
+  consent?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -592,7 +706,10 @@ export interface ApplicationsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  role?: T;
+  roles?: T;
+  function?: T;
+  active?: T;
+  mandateEndsAt?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -610,6 +727,21 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-log_select".
+ */
+export interface AuditLogSelect<T extends boolean = true> {
+  action?: T;
+  target?: T;
+  documentId?: T;
+  label?: T;
+  changes?: T;
+  user?: T;
+  userName?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -687,12 +819,57 @@ export interface SiteSetting {
   publicEmail?: string | null;
   phone?: string | null;
   address?: string | null;
+  /**
+   * Affichée sur les pages Transparence, Mentions légales et Confidentialité.
+   */
+  legal?: {
+    legalName?: string | null;
+    registrationNumber?: string | null;
+    registrationDate?: string | null;
+    registrationAuthority?: string | null;
+    headOffice?: string | null;
+    /**
+     * Nom et fonction, affichés dans les mentions légales. Ex. : Prénom NOM, Chargé de communication.
+     */
+    publicationDirector?: string | null;
+  };
   socials?: {
     facebook?: string | null;
     instagram?: string | null;
     linkedin?: string | null;
     whatsapp?: string | null;
   };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Seuls les comptes au nom de l’association. Un moyen décoché n’apparaît pas sur le site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-settings".
+ */
+export interface DonationSetting {
+  id: number;
+  methods?:
+    | {
+        /**
+         * Ex. : Orange Money
+         */
+        label: string;
+        kind: 'mobile-money' | 'bank' | 'other';
+        /**
+         * Doit être l’ASO.
+         */
+        accountName?: string | null;
+        accountNumber?: string | null;
+        /**
+         * Les étapes à suivre, en mots simples. Ex. : « Faites un transfert vers ce numéro, puis notez la référence reçue par SMS. »
+         */
+        instructions?: string | null;
+        active?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -723,6 +900,16 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   publicEmail?: T;
   phone?: T;
   address?: T;
+  legal?:
+    | T
+    | {
+        legalName?: T;
+        registrationNumber?: T;
+        registrationDate?: T;
+        registrationAuthority?: T;
+        headOffice?: T;
+        publicationDirector?: T;
+      };
   socials?:
     | T
     | {
@@ -730,6 +917,26 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         instagram?: T;
         linkedin?: T;
         whatsapp?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-settings_select".
+ */
+export interface DonationSettingsSelect<T extends boolean = true> {
+  methods?:
+    | T
+    | {
+        label?: T;
+        kind?: T;
+        accountName?: T;
+        accountNumber?: T;
+        instructions?: T;
+        active?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;

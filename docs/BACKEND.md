@@ -3,7 +3,8 @@
 Le backend vit **dans la même application Next.js** que le site, grâce à
 [Payload CMS](https://payloadcms.com) (v3) et une base **PostgreSQL (Neon)**.
 
-- Site public : `/`, `/about`, `/actions`, `/news`, `/volunteers`, `/contact`
+- Site public : `/`, `/about`, `/actions`, `/news`, `/volunteers`, `/contact`, `/transparence`, `/donate`,
+  `/mentions-legales`, `/confidentialite`
 - Back-office : `/admin`
 - API REST (lecture du contenu public) : `/api/...`
 
@@ -44,16 +45,33 @@ frontend/
   lib/validation/        → schémas Zod partagés front/back (le « contrat »)
 ```
 
-## Contenu du back-office
+## Rôles et responsabilités
 
-| Section | Contenu | Qui peut lire |
+Les rôles suivent les fonctions du Bureau Exécutif (PV de l'Assemblée Générale du 24/01/2026).
+Un compte peut cumuler plusieurs rôles ; chaque personne ne voit dans le menu que ce qui la concerne.
+
+| Rôle | Fonction au PV | Peut faire |
 |---|---|---|
-| Contenu | Actualités (brouillon/publié), Équipe, Images, Chiffres clés | Public (publié seulement) |
-| Transparence | Rapports financiers (PDF) | Public si « Publié sur le site » |
-| Demandes reçues | Messages de contact, Adhésions & bénévolat | Équipe connectée uniquement |
-| Administration | Comptes, Coordonnées & réseaux | Administrateurs |
+| Président — administrateur | Président | Tout ; seul à attribuer le rôle admin ; publie les rapports financiers |
+| Administrateur technique | Vice-Président (développement du site) | Comptes (sauf rôle admin), réglages, contenus ; aucune donnée personnelle |
+| Communication | Chargé de communication (intérim : Vice-Président) | Actualités, équipe, images, chiffres clés |
+| Secrétariat | Secrétaire Générale | Messages de contact, adhésions et bénévolat |
+| Trésorerie | Trésorière Générale | Dépose et met à jour les rapports financiers, sans les publier |
+| Commissaire aux comptes | Commissaire aux Comptes | Lit tout, journal compris ; seule action : viser les rapports |
+| Mobilisation | 1er et 2e Mobilisateurs | Adhésions et bénévolat |
+| Consultation | Conseillers | Lecture du contenu, sans données personnelles |
 
-Rôles : **Administrateur** (tout, y compris les comptes) et **Éditeur** (contenu et suivi des demandes).
+**Rapports financiers, règle des « quatre yeux »** : la Trésorerie dépose → le Commissaire aux
+comptes vise (son nom et la date sont enregistrés) → le Président publie. Publication impossible
+sans visa ; toute modification d'un rapport visé annule le visa et le dépublie.
+
+**Sécurité des comptes** : pas d'inscription publique ; il reste toujours au moins un administrateur
+actif ; 5 échecs de connexion = blocage 15 min ; session de 8 h ; un compte peut être désactivé, et la
+connexion est refusée après la date de fin de mandat (mandat du bureau : 3 ans, jusqu'en janvier 2029).
+
+**Journal des modifications** (Administration → Journal) : chaque création, modification ou
+suppression est enregistrée (qui, quoi, quels champs, quand). Personne ne peut le modifier ni l'effacer.
+Lecture : Président, administrateur technique, Commissaire aux comptes.
 
 ## Affichage sur le site
 
@@ -67,6 +85,49 @@ lisent le contenu du back-office via `server/content/` :
 - si la base est injoignable, le site reste en ligne : les sections concernées sont simplement
   masquées et l'erreur est journalisée (`[contenu] … indisponible`).
 
+## Page Transparence (`/transparence`)
+
+Affiche automatiquement les rapports financiers **publiés et visés**, avec la mention du visa
+(nom du Commissaire aux comptes et date) et le lien de téléchargement, ainsi que l'identité
+légale de l'association (Administration → Coordonnées & réseaux → Identité légale).
+Les PDF non publiés restent inaccessibles au public, même avec leur adresse exacte.
+
+## Dons (`/donate`)
+
+Version sans paiement en ligne, entièrement traçable :
+
+1. Le donateur envoie l'argent sur un compte de l'ASO affiché sur la page (Orange Money ;
+   virement bancaire à ajouter quand le compte sera ouvert).
+2. Il déclare son don : montant, référence de la transaction (SMS), projet soutenu, nom ou
+   don anonyme. Il reçoit une référence de don (ex. `DON-2026-7K3QXM`).
+3. Le don arrive dans **Transparence → Dons** avec le statut « Déclaré ». La Trésorerie vérifie
+   la réception sur le relevé et le passe à « Reçu » ou « Non retrouvé » (son nom et la date sont
+   enregistrés, l'action est inscrite au journal).
+
+Les informations déclarées (montant, référence, donateur…) sont figées : personne ne peut les
+modifier après coup. Lecture : Président, Trésorerie, Commissaire aux comptes.
+
+**Mettre en service** : Transparence → Moyens de don → Orange Money : saisir le numéro du compte
+**au nom de l'association**, cocher « Afficher sur le site ». Tant qu'aucun moyen n'est actif,
+la page affiche un message d'attente et pas de formulaire.
+
+## Coordonnées (page Contact et pied de page)
+
+La page Contact (téléphone, email, adresse, itinéraire, réseaux sociaux) et le pied de page
+lisent Administration → Coordonnées & réseaux (`server/content/contact.ts`). Ce qui est vide
+n'est pas affiché ; sans adresse saisie, le siège social de l'identité légale est utilisé.
+Un numéro à 8 chiffres est composé avec l'indicatif +236 ; pour WhatsApp, le numéro suffit.
+
+## Mentions légales et confidentialité
+
+`/mentions-legales` et `/confidentialite` reprennent automatiquement l'identité légale, le
+directeur de la publication et les coordonnées saisis dans Administration → Coordonnées & réseaux.
+Le reste du texte (hébergeurs, durées de conservation, droits) est dans le code des pages :
+**à mettre à jour si l'hébergeur ou les pratiques changent** (et la date « Dernière mise à jour »).
+
+Durées de conservation annoncées : messages 5 ans, adhésions et bénévolat 5 ans après la fin de
+l'engagement, dons 10 ans. Leur suppression n'est pas encore automatique (voir plus bas).
+
 ## Formulaires publics
 
 Contact, adhésion et bénévolat passent par des **Server Actions** (`server/actions/forms.ts`) :
@@ -74,11 +135,48 @@ Contact, adhésion et bénévolat passent par des **Server Actions** (`server/ac
 1. validation serveur avec les schémas Zod de `lib/validation/forms.ts` ;
 2. champ piège anti-robots (les envois de robots sont ignorés silencieusement) ;
 3. enregistrement dans le back-office (statut « Nouveau ») ;
-4. notification par email à l'adresse définie dans *Coordonnées & réseaux*
-   (sans service d'email configuré, l'email est seulement affiché dans la console).
+4. emails : alerte à l'équipe concernée et accusé de réception à la personne (voir « Emails »).
 
 Les collections de demandes refusent toute création via l'API publique : seules les
 Server Actions peuvent écrire.
+
+## Emails
+
+Envoyés par le compte **Gmail de l'association** (SMTP), après la réponse au visiteur :
+le formulaire reste rapide et un problème d'email ne fait jamais échouer une demande
+(il est seulement journalisé : `Email non envoyé`).
+
+| Événement | Équipe alertée | Email à la personne |
+|---|---|---|
+| Message de contact | Secrétariat (« Répondre » écrit directement au visiteur) | Accusé de réception |
+| Demande d'adhésion | Secrétariat, Mobilisation | Accusé de réception |
+| Candidature bénévole | Mobilisation, Secrétariat | Accusé de réception |
+| Don déclaré | Trésorerie | Confirmation avec la référence `DON-…` (si email donné) |
+| Don passé à « Reçu » | — | « Votre don est bien arrivé » (si email donné) |
+
+- **Destinataires des alertes** : les comptes actifs, au mandat en cours, qui ont le rôle
+  concerné, plus la boîte générale (Administration → Coordonnées & réseaux → « Email qui reçoit
+  les notifications »). Si personne n'a encore le rôle, les administrateurs sont prévenus.
+- **Sécurité** : les emails envoyés au public ne recopient jamais un texte saisi dans le
+  formulaire (sinon n'importe qui pourrait faire envoyer par l'ASO un message de son choix).
+  Tout texte saisi est échappé dans les emails de l'équipe.
+- Textes des emails : `server/email/messages.ts` ; mise en page : `server/email/layout.ts`.
+
+**Configurer Gmail** (une fois, avec le compte Gmail de l'ASO) :
+
+1. Compte Google → Sécurité → activer la **Validation en deux étapes**.
+2. Compte Google → Sécurité → **Mots de passe des applications** → créer « Site ASO » :
+   Google affiche un code de 16 lettres.
+3. Dans `frontend/.env` (et plus tard dans les variables d'environnement de l'hébergeur) :
+   ```bash
+   SMTP_USER=adresse.de.lassociation@gmail.com
+   SMTP_PASS=lecodede16lettres   # sans espaces
+   ```
+4. Redémarrez `bun dev`. Sans ces deux variables, les emails s'affichent seulement dans la console.
+
+Limite Gmail : environ 500 emails par jour, largement suffisant. Pour passer plus tard à un
+service avec nom de domaine (Resend, Brevo…), il suffit de changer `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASS` et `EMAIL_FROM` : aucun code à modifier.
 
 ## Modifier le schéma de données
 
@@ -110,6 +208,15 @@ Si vous ajoutez un composant personnalisé dans l'admin : `bun run generate:impo
 
 ## Dépannage
 
+**`git switch` refuse : « Your local changes to … payload-types.ts would be overwritten »**
+Ce fichier est généré. Écartez la copie locale puis changez de branche :
+
+```bash
+git restore frontend/server/payload/payload-types.ts
+```
+
+Depuis cette version, `bun dev` ne le régénère plus : seulement `bun run generate:types`.
+
 **« It looks like you've run Payload in dev mode… Would you like to proceed? »**
 La base a été modifiée « à la volée » par une ancienne version du projet. Répondez `N`, puis
 dans Neon → *SQL Editor* (sur la bonne branche) exécutez :
@@ -125,10 +232,16 @@ puis relancez `bun run migrate`.
 - **Stockage des fichiers** : les images et PDF sont stockés sur le disque en local
   (`frontend/uploads/`, ignoré par Git). Sur Vercel, le disque n'est pas persistant :
   il faudra un stockage objet (ex. Vercel Blob ou S3) via un plugin Payload.
-- **Service d'email** (ex. Resend) pour les notifications.
+- **Emails** : renseigner `SMTP_USER` / `SMTP_PASS` (Gmail de l'ASO) chez l'hébergeur.
+- **Limiter le nombre d'envois par visiteur** (anti-abus des formulaires) une fois l'hébergeur
+  choisi (ex. règle de pare-feu Vercel).
 - Brancher les autres contenus encore écrits en dur (page Actions, chiffres de la page
-  À propos, coordonnées du pied de page) sur le back-office.
+  À propos) sur le back-office.
 - Base Neon de production distincte de la base de développement.
+- Suppression automatique des données au-delà des durées annoncées dans la politique de
+  confidentialité (tâche planifiée).
+- Renseigner l'email public et l'adresse exacte du siège (Coordonnées & réseaux) : ils
+  apparaissent dans les mentions légales et la politique de confidentialité.
 
 ## Protection des données
 

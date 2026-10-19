@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-import { anyone, isStaff } from "../access";
+import { CONTENT_EDITORS, READERS, allow, anyone, hiddenUnless } from "../access";
+import { auditAfterChange, auditAfterDelete } from "../hooks/audit";
 import { CACHE_TAGS } from "@/server/content/tags";
 import { revalidateAfterChange, revalidateAfterDelete } from "../hooks/revalidate";
 
@@ -11,17 +12,18 @@ export const TeamMembers: CollectionConfig = {
     group: "Contenu",
     useAsTitle: "name",
     defaultColumns: ["name", "role", "type", "order"],
+    hidden: hiddenUnless(...CONTENT_EDITORS, ...READERS),
   },
   access: {
     read: anyone,
-    create: isStaff,
-    update: isStaff,
-    delete: isStaff,
+    create: allow(...CONTENT_EDITORS),
+    update: allow(...CONTENT_EDITORS),
+    delete: allow(...CONTENT_EDITORS),
   },
   defaultSort: "order",
   hooks: {
-    afterChange: [revalidateAfterChange(CACHE_TAGS.team)],
-    afterDelete: [revalidateAfterDelete(CACHE_TAGS.team)],
+    afterChange: [revalidateAfterChange(CACHE_TAGS.team), auditAfterChange("Membre de l’équipe")],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.team), auditAfterDelete("Membre de l’équipe")],
   },
   fields: [
     { name: "name", label: "Nom", type: "text", required: true },
