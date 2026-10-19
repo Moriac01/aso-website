@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 
+import { phoneHref } from "@/lib/contact";
+import { getContactInfo } from "@/server/content/contact";
+
 const navigation = [
   ["À propos", "/about"],
   ["Actions", "/actions"],
@@ -11,13 +14,9 @@ const navigation = [
   ["Contact", "/contact"],
 ];
 
-const socialLinks = [
-  { label: "Facebook", href: "#" },
-  { label: "Instagram", href: "#" },
-  { label: "LinkedIn", href: "#" },
-];
-
-const Footer = () => {
+// Coordonnées et réseaux : Administration → Coordonnées & réseaux (ce qui est vide n'est pas affiché).
+const Footer = async () => {
+  const { email, phone, address, socials } = await getContactInfo();
   return (
     <footer className="border-t border-[#d9e0d5] bg-white px-6 pb-3 pt-6 text-[#17483b] sm:px-10 lg:px-12">
       <div className="mx-auto max-w-7xl">
@@ -46,41 +45,64 @@ const Footer = () => {
           <div className="col-span-1">
             <h2 className="text-base font-semibold">Contact</h2>
             <ul className="mt-3 flex flex-col gap-2 text-sm leading-5 text-[#526057]">
-              <li className="flex items-center gap-3">
-                <Mail className="size-4 shrink-0" aria-hidden="true" />
-                <a href="mailto:contact@monsite.com" className="transition-colors hover:text-[#17483b]">
-                  contact@monsite.com
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="size-4 shrink-0" aria-hidden="true" />
-                <a href="tel:+23672537846" className="transition-colors hover:text-[#17483b]">
-                  (+236) 72 53 78 46
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>123 Rue, Avenue des Martyrs, Bangui</span>
-              </li>
+              {email ? (
+                <li className="flex items-center gap-3">
+                  <Mail className="size-4 shrink-0" aria-hidden="true" />
+                  <a href={`mailto:${email}`} className="break-all transition-colors hover:text-[#17483b]">
+                    {email}
+                  </a>
+                </li>
+              ) : null}
+              {phone ? (
+                <li className="flex items-center gap-3">
+                  <Phone className="size-4 shrink-0" aria-hidden="true" />
+                  <a href={phoneHref(phone)} className="transition-colors hover:text-[#17483b]">
+                    {phone}
+                  </a>
+                </li>
+              ) : null}
+              {address ? (
+                <li className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                  <span className="whitespace-pre-line">{address}</span>
+                </li>
+              ) : null}
+              {!email && !phone && !address ? (
+                <li>
+                  <Link href="/contact" className="transition-colors hover:text-[#17483b]">
+                    Nous écrire
+                  </Link>
+                </li>
+              ) : null}
             </ul>
 
-            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[#d9e0d5] pt-4">
-              {socialLinks.map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="flex items-center gap-1 text-sm text-[#526057] transition-colors hover:text-[#17483b]"
-                >
-                  {label}
-                  <ArrowUpRight className="size-3" aria-hidden="true" />
-                </a>
-              ))}
-            </div>
+            {socials.length > 0 ? (
+              <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[#d9e0d5] pt-4">
+                {socials.map(({ network, label, href }) => (
+                  <a
+                    key={network}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1 text-sm text-[#526057] transition-colors hover:text-[#17483b]"
+                  >
+                    {label}
+                    <ArrowUpRight className="size-3" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
 
-        <div className="col-span-2 mt-6 border-t border-[#d9e0d5] pt-3 text-center text-[13px] text-[#526057] md:col-span-3">
-          © {new Date().getFullYear()} ASO | All rights reserved.
+        <div className="col-span-2 mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-[#d9e0d5] pt-3 text-center text-[13px] text-[#526057] md:col-span-3">
+          <span>© {new Date().getFullYear()} ASO | Tous droits réservés.</span>
+          <Link href="/mentions-legales" className="transition-colors hover:text-[#17483b]">
+            Mentions légales
+          </Link>
+          <Link href="/confidentialite" className="transition-colors hover:text-[#17483b]">
+            Confidentialité
+          </Link>
         </div>
       </div>
     </footer>

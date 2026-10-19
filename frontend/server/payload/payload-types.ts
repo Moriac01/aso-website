@@ -820,7 +820,7 @@ export interface SiteSetting {
   phone?: string | null;
   address?: string | null;
   /**
-   * Affichée sur la page Transparence et dans le pied de page.
+   * Affichée sur les pages Transparence, Mentions légales et Confidentialité.
    */
   legal?: {
     legalName?: string | null;
@@ -828,6 +828,10 @@ export interface SiteSetting {
     registrationDate?: string | null;
     registrationAuthority?: string | null;
     headOffice?: string | null;
+    /**
+     * Nom et fonction, affichés dans les mentions légales. Ex. : Prénom NOM, Chargé de communication.
+     */
+    publicationDirector?: string | null;
   };
   socials?: {
     facebook?: string | null;
@@ -904,6 +908,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         registrationDate?: T;
         registrationAuthority?: T;
         headOffice?: T;
+        publicationDirector?: T;
       };
   socials?:
     | T
