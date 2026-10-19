@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { PersonCard } from "@/components/PersonCard";
-import { people } from "@/app/about/data";
+import { people } from "@/app/(site)/about/data";
 
 const values = [
   {

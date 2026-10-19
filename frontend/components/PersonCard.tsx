@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import type { Person } from "@/app/about/data";
+import type { Person } from "@/app/(site)/about/data";
 
 export function PersonCard({ person }: { person: Person }) {
   const typeLabels: Record<Person["type"], string> = {

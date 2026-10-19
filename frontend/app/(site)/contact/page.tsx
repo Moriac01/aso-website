@@ -18,6 +18,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { HoneypotField } from "@/components/HoneypotField";
+import { submitContactMessage } from "@/server/actions/forms";
 
 type ContactFormValues = {
   name: string;
@@ -87,6 +89,9 @@ export default function ContactPage() {
   const [form, setForm] = useState<ContactFormValues>(initialValues);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   const mapLink = useMemo(
     () => "https://www.google.com/maps/search/?api=1&query=123+Rue+Avenue+des+Martyrs+Bangui",
@@ -114,11 +119,23 @@ export default function ContactPage() {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError(null);
 
     if (!validateForm()) {
       setIsSubmitted(false);
+      return;
+    }
+
+    setIsSending(true);
+    const result = await submitContactMessage({ ...form, website: honeypot });
+    setIsSending(false);
+
+    if (!result.ok) {
+      setIsSubmitted(false);
+      setErrors((result.fieldErrors ?? {}) as ContactErrors);
+      setSubmitError(result.error);
       return;
     }
 
@@ -241,6 +258,7 @@ export default function ContactPage() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label htmlFor="name" className="mb-2 block text-sm font-medium text-[#070707]">
@@ -339,11 +357,18 @@ export default function ContactPage() {
                 <FieldError message={errors.consent} />
               </div>
 
+              {submitError && (
+                <p role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  {submitError}
+                </p>
+              )}
+
               <Button
                 type="submit"
+                disabled={isSending}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#0a67d0]"
               >
-                Envoyer le message
+                {isSending ? "Envoi en cours…" : "Envoyer le message"}
                 <Send className="size-4" />
               </Button>
             </form>
