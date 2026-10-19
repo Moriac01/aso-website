@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { fr } from "@payloadcms/translations/languages/fr";
 import { buildConfig } from "payload";
@@ -87,6 +88,29 @@ export default buildConfig({
     AuditLog,
   ],
   globals: [KeyFigures, SiteSettings, DonationSettings],
+
+  plugins: [
+    /**
+     * Fichiers (images, PDF) sur Vercel Blob en production : le disque de Vercel
+     * n'est pas permanent. Sans BLOB_READ_WRITE_TOKEN (en local), les fichiers
+     * restent dans frontend/uploads/ comme avant.
+     */
+    vercelBlobStorage({
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      // Même structure de base partout, que le stockage soit actif ou non.
+      alwaysInsertFields: true,
+      // Envoi direct du navigateur vers Blob : pas de limite de 4,5 Mo par fichier.
+      clientUploads: true,
+      collections: {
+        // Images publiques : servies directement par le CDN de Vercel (rapide, gratuit).
+        media: { prefix: "media", disablePayloadAccessControl: true },
+        // Rapports financiers : toujours servis via le back-office, qui vérifie qu'ils
+        // sont publiés et visés. Chaque envoi depuis le back-office est rangé dans un
+        // dossier au nom aléatoire : l'adresse brute du fichier est impossible à deviner.
+        "financial-reports": { prefix: "rapports" },
+      },
+    }),
+  ],
 
   editor: lexicalEditor(),
   sharp,

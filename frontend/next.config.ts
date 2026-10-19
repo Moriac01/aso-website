@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   images: {
     // Images servies par le back-office (collection « media »).
     localPatterns: [{ pathname: "/api/media/file/**" }, { pathname: "/**" }],
+    // En production, images stockées sur Vercel Blob.
+    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
 };
 

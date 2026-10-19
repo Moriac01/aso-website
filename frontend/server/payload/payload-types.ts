@@ -190,6 +190,8 @@ export interface Media {
    */
   alt: string;
   consent?: boolean | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -272,6 +274,8 @@ export interface FinancialReport {
    * Possible uniquement après le visa.
    */
   published?: boolean | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -566,6 +570,8 @@ export interface TeamMembersSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   consent?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -626,6 +632,8 @@ export interface FinancialReportsSelect<T extends boolean = true> {
   auditedAt?: T;
   auditComment?: T;
   published?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -816,8 +824,17 @@ export interface KeyFigure {
 export interface SiteSetting {
   id: number;
   notificationEmail?: string | null;
+  /**
+   * Affiché sur la page Contact, dans le pied de page et les pages légales.
+   */
   publicEmail?: string | null;
+  /**
+   * Format international conseillé, pour les appels de l’étranger : +236 70 00 00 00
+   */
   phone?: string | null;
+  /**
+   * Adresse du siège, telle qu’on la donne à un visiteur. Vide : le siège social de l’identité légale est affiché.
+   */
   address?: string | null;
   /**
    * Affichée sur les pages Transparence, Mentions légales et Confidentialité.
@@ -833,6 +850,9 @@ export interface SiteSetting {
      */
     publicationDirector?: string | null;
   };
+  /**
+   * Adresse complète de chaque page (https://…). Pour WhatsApp, le numéro suffit. Un réseau laissé vide n’est pas affiché sur le site.
+   */
   socials?: {
     facebook?: string | null;
     instagram?: string | null;
