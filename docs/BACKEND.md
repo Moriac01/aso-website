@@ -84,6 +84,13 @@ lisent le contenu du back-office via `server/content/` :
 - si la base est injoignable, le site reste en ligne : les sections concernées sont simplement
   masquées et l'erreur est journalisée (`[contenu] … indisponible`).
 
+## Page Transparence (`/transparence`)
+
+Affiche automatiquement les rapports financiers **publiés et visés**, avec la mention du visa
+(nom du Commissaire aux comptes et date) et le lien de téléchargement, ainsi que l'identité
+légale de l'association (Administration → Coordonnées & réseaux → Identité légale).
+Les PDF non publiés restent inaccessibles au public, même avec leur adresse exacte.
+
 ## Formulaires publics
 
 Contact, adhésion et bénévolat passent par des **Server Actions** (`server/actions/forms.ts`) :
@@ -126,6 +133,15 @@ Si vous ajoutez un composant personnalisé dans l'admin : `bun run generate:impo
 | `bun run seed` | Importer le contenu de départ (ignore ce qui existe déjà) |
 
 ## Dépannage
+
+**`git switch` refuse : « Your local changes to … payload-types.ts would be overwritten »**
+Ce fichier est généré. Écartez la copie locale puis changez de branche :
+
+```bash
+git restore frontend/server/payload/payload-types.ts
+```
+
+Depuis cette version, `bun dev` ne le régénère plus : seulement `bun run generate:types`.
 
 **« It looks like you've run Payload in dev mode… Would you like to proceed? »**
 La base a été modifiée « à la volée » par une ancienne version du projet. Répondez `N`, puis

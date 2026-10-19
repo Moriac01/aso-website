@@ -32,6 +32,9 @@ export default buildConfig({
     importMap: {
       baseDir: dirname,
       importMapFile: path.resolve(dirname, "app/(payload)/admin/importMap.js"),
+      // Fichier généré : uniquement via `bun run generate:importmap`, jamais pendant `bun dev`
+      // (sinon chaque développeur voit des modifications parasites dans Git).
+      autoGenerate: false,
     },
   },
 
@@ -79,5 +82,7 @@ export default buildConfig({
 
   typescript: {
     outputFile: path.resolve(dirname, "server/payload/payload-types.ts"),
+    // Types générés uniquement via `bun run generate:types` (pas à chaque `bun dev`).
+    autoGenerate: false,
   },
 });
