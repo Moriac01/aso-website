@@ -1,11 +1,13 @@
 import type { CollectionConfig, FieldHook } from "payload";
 
 import { isStaff, publishedOrStaff } from "../access";
+import { CACHE_TAGS } from "@/server/content/tags";
+import { revalidateAfterChange, revalidateAfterDelete } from "../hooks/revalidate";
 
 const slugify = (value: string) =>
   value
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "") // retire les accents
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -46,6 +48,10 @@ export const News: CollectionConfig = {
     delete: isStaff,
   },
   defaultSort: "-publishedAt",
+  hooks: {
+    afterChange: [revalidateAfterChange(CACHE_TAGS.news)],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.news)],
+  },
   fields: [
     { name: "title", label: "Titre", type: "text", required: true, maxLength: 140 },
     {

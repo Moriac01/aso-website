@@ -1,6 +1,8 @@
 import type { GlobalConfig } from "payload";
 
 import { anyone, isStaff } from "../access";
+import { CACHE_TAGS } from "@/server/content/tags";
+import { revalidateGlobal } from "../hooks/revalidate";
 
 /** Chiffres clés affichés sur le site — une seule source de vérité. */
 export const KeyFigures: GlobalConfig = {
@@ -14,6 +16,9 @@ export const KeyFigures: GlobalConfig = {
   access: {
     read: anyone,
     update: isStaff,
+  },
+  hooks: {
+    afterChange: [revalidateGlobal(CACHE_TAGS.keyFigures)],
   },
   fields: [
     {

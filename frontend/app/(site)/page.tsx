@@ -1,12 +1,15 @@
-'use client';
-
 import Link from "next/link";
 import Image from "next/image";
 
 import Hero from "@/components/Hero";
 import { NewsSection } from "@/components/news/NewsSection";
 import Stats from "@/components/stats";
+import { getKeyFigures } from "@/server/content/keyFigures";
 import { getFeaturedNews } from "@/services/news";
+
+// Filet de sécurité : la page se régénère au plus tard toutes les 5 min
+// (et immédiatement quand l'équipe publie depuis le back-office).
+export const revalidate = 300;
 
 const missions = [
   {
@@ -26,8 +29,8 @@ const missions = [
   },
 ];
 
-export default function Home() {
-  const featuredNews = getFeaturedNews();
+export default async function Home() {
+  const [featuredNews, keyFigures] = await Promise.all([getFeaturedNews(), getKeyFigures()]);
 
   return (
     <main className="bg-[#f7faf6] text-[#070707]">
@@ -45,7 +48,7 @@ export default function Home() {
       </section>
 
       <div className="mt-4.5 md:mt-10">
-        <Stats />
+        <Stats items={keyFigures} />
       </div>
 
       <section id="actions" className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
