@@ -227,11 +227,46 @@ DELETE FROM payload_migrations WHERE batch = -1;
 
 puis relancez `bun run migrate`.
 
-## À faire avant la mise en production
+## Mise en production (Vercel)
 
-- **Stockage des fichiers** : les images et PDF sont stockés sur le disque en local
-  (`frontend/uploads/`, ignoré par Git). Sur Vercel, le disque n'est pas persistant :
-  il faudra un stockage objet (ex. Vercel Blob ou S3) via un plugin Payload.
+**Stockage des fichiers** : en local, images et PDF vont dans `frontend/uploads/` (ignoré
+par Git). Sur Vercel, le disque n'est pas permanent : dès que `BLOB_READ_WRITE_TOKEN` est
+défini, ils vont sur **Vercel Blob** (`@payloadcms/storage-vercel-blob`).
+
+- Images (`media`) : servies directement par le CDN de Vercel.
+- Rapports financiers : toujours servis par `/api/financial-reports/file/…`, qui vérifie
+  qu'ils sont publiés et visés. Chaque envoi depuis le back-office est rangé dans un dossier
+  au nom aléatoire (`_objectKey`), l'adresse brute est donc impossible à deviner.
+- Envoi direct du navigateur vers Blob (`clientUploads`) : pas de limite de 4,5 Mo.
+- `importMap.js` contient le composant d'envoi Blob. Pour le régénérer, définir un jeton au
+  bon format, sinon il disparaît :
+  `BLOB_READ_WRITE_TOKEN=vercel_blob_rw_x_y bun run generate:importmap`
+
+**Variables d'environnement sur Vercel** (Settings → Environment Variables, Production) :
+
+| Variable | Valeur |
+|---|---|
+| `DATABASE_URL` | Neon, projet `aso-production`, « Pooled connection » |
+| `PAYLOAD_SECRET` | Nouvelle clé (`openssl rand -hex 32`), différente de celle du développement |
+| `NEXT_PUBLIC_SERVER_URL` | `https://aso-website.vercel.app`, puis `https://aso-rca.org` |
+| `BLOB_READ_WRITE_TOKEN` | Ajoutée automatiquement en reliant un stockage Blob (Storage → Blob) |
+| `SMTP_USER` / `SMTP_PASS` | Compte Gmail de l'ASO et mot de passe d'application |
+
+Puis **Redeploy**. Les migrations s'appliquent automatiquement au démarrage.
+
+**Remplir la base de production** depuis un poste de développement (Git Bash), avec les
+valeurs de production le temps de la commande (elles priment sur `frontend/.env`) :
+
+```bash
+DATABASE_URL="…production…" PAYLOAD_SECRET="…production…" BLOB_READ_WRITE_TOKEN="…" \
+NEXT_PUBLIC_SERVER_URL="https://aso-website.vercel.app" bun run migrate
+# même ligne avec « bun run seed » à la place de « bun run migrate »
+```
+
+Puis ouvrir `/admin` en ligne et créer le compte du Président (le premier compte est
+administrateur).
+
+## À faire avant la mise en production
 - **Emails** : renseigner `SMTP_USER` / `SMTP_PASS` (Gmail de l'ASO) chez l'hébergeur.
 - **Limiter le nombre d'envois par visiteur** (anti-abus des formulaires) une fois l'hébergeur
   choisi (ex. règle de pare-feu Vercel).

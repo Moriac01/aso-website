@@ -3,6 +3,7 @@ import * as migration_20261016_160536_roles_par_fonction from './20261016_160536
 import * as migration_20261016_162128_identite_legale from './20261016_162128_identite_legale';
 import * as migration_20261016_165231_dons from './20261016_165231_dons';
 import * as migration_20261016_175312_mentions_legales from './20261016_175312_mentions_legales';
+import * as migration_20261019_192207_stockage_blob from './20261019_192207_stockage_blob';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261016_175312_mentions_legales.up,
     down: migration_20261016_175312_mentions_legales.down,
-    name: '20261016_175312_mentions_legales'
+    name: '20261016_175312_mentions_legales',
+  },
+  {
+    up: migration_20261019_192207_stockage_blob.up,
+    down: migration_20261019_192207_stockage_blob.down,
+    name: '20261019_192207_stockage_blob'
   },
 ];
