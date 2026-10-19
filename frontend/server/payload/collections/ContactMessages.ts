@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-import { isAdmin, isStaff, nobody } from "../access";
+import { allow, hiddenUnless, nobody } from "../access";
+import { auditAfterChange, auditAfterDelete } from "../hooks/audit";
 
 export const requestStatusOptions = [
   { label: "Nouveau", value: "new" },
@@ -20,12 +21,21 @@ export const ContactMessages: CollectionConfig = {
     group: "Demandes reçues",
     useAsTitle: "subject",
     defaultColumns: ["subject", "name", "email", "status", "createdAt"],
+    hidden: hiddenUnless("admin", "secretariat", "controle"),
   },
   access: {
     create: nobody,
-    read: isStaff,
-    update: isStaff,
-    delete: isAdmin,
+    // Données personnelles : uniquement les fonctions qui traitent ces demandes.
+    read: allow("admin", "secretariat", "controle"),
+    update: allow("admin", "secretariat"),
+    delete: allow("admin"),
+  },
+  hooks: {
+    // Les créations viennent du formulaire public : seules les actions de l'équipe sont journalisées.
+    afterChange: [
+      (args) => (args.operation === "update" ? auditAfterChange("Message de contact", (doc) => doc.subject)(args) : args.doc),
+    ],
+    afterDelete: [auditAfterDelete("Message de contact", (doc) => doc.subject)],
   },
   defaultSort: "-createdAt",
   fields: [

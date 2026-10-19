@@ -1,15 +1,19 @@
 import type { GlobalConfig } from "payload";
 
-import { anyone, isAdmin } from "../access";
+import { ADMINS, allow, anyone, hiddenUnless } from "../access";
+import { auditGlobal } from "../hooks/audit";
 
 /** Coordonnées et liens officiels, réutilisés partout (en-tête, pied de page, contact). */
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
   label: "Coordonnées & réseaux",
-  admin: { group: "Administration" },
+  admin: { group: "Administration", hidden: hiddenUnless(...ADMINS, "controle") },
   access: {
     read: anyone,
-    update: isAdmin,
+    update: allow(...ADMINS),
+  },
+  hooks: {
+    afterChange: [auditGlobal("Coordonnées & réseaux")],
   },
   fields: [
     {

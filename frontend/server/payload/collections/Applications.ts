@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
-import { isAdmin, isStaff, nobody } from "../access";
+import { allow, hiddenUnless, nobody } from "../access";
+import { auditAfterChange, auditAfterDelete } from "../hooks/audit";
 
 type ApplicationData = { type?: "member" | "volunteer" };
 const forMember = (data: ApplicationData) => data?.type === "member";
@@ -17,12 +18,20 @@ export const Applications: CollectionConfig = {
     group: "Demandes reçues",
     useAsTitle: "email",
     defaultColumns: ["firstName", "lastName", "type", "city", "status", "createdAt"],
+    hidden: hiddenUnless("admin", "secretariat", "mobilisation", "controle"),
   },
   access: {
     create: nobody,
-    read: isStaff,
-    update: isStaff,
-    delete: isAdmin,
+    // Données personnelles : uniquement les fonctions qui traitent ces demandes.
+    read: allow("admin", "secretariat", "mobilisation", "controle"),
+    update: allow("admin", "secretariat", "mobilisation"),
+    delete: allow("admin"),
+  },
+  hooks: {
+    afterChange: [
+      (args) => (args.operation === "update" ? auditAfterChange("Candidature", (doc) => doc.email)(args) : args.doc),
+    ],
+    afterDelete: [auditAfterDelete("Candidature", (doc) => doc.email)],
   },
   defaultSort: "-createdAt",
   fields: [

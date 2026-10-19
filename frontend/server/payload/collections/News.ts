@@ -1,6 +1,7 @@
 import type { CollectionConfig, FieldHook } from "payload";
 
-import { isStaff, publishedOrStaff } from "../access";
+import { CONTENT_EDITORS, READERS, allow, hiddenUnless, publishedOrStaff } from "../access";
+import { auditAfterChange, auditAfterDelete } from "../hooks/audit";
 import { CACHE_TAGS } from "@/server/content/tags";
 import { revalidateAfterChange, revalidateAfterDelete } from "../hooks/revalidate";
 
@@ -36,6 +37,7 @@ export const News: CollectionConfig = {
     group: "Contenu",
     useAsTitle: "title",
     defaultColumns: ["title", "category", "publishedAt", "featured", "_status"],
+    hidden: hiddenUnless(...CONTENT_EDITORS, ...READERS),
   },
   versions: {
     drafts: true, // Brouillon / Publié géré par Payload
@@ -43,14 +45,14 @@ export const News: CollectionConfig = {
   },
   access: {
     read: publishedOrStaff,
-    create: isStaff,
-    update: isStaff,
-    delete: isStaff,
+    create: allow(...CONTENT_EDITORS),
+    update: allow(...CONTENT_EDITORS),
+    delete: allow(...CONTENT_EDITORS),
   },
   defaultSort: "-publishedAt",
   hooks: {
-    afterChange: [revalidateAfterChange(CACHE_TAGS.news)],
-    afterDelete: [revalidateAfterDelete(CACHE_TAGS.news)],
+    afterChange: [revalidateAfterChange(CACHE_TAGS.news), auditAfterChange("Actualité")],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.news), auditAfterDelete("Actualité")],
   },
   fields: [
     { name: "title", label: "Titre", type: "text", required: true, maxLength: 140 },
