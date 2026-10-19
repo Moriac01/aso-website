@@ -13,7 +13,8 @@
     "generate:types": "cd frontend && payload generate:types",
     "generate:importmap": "cd frontend && payload generate:importmap",
     "migrate": "cd frontend && payload migrate",
-    "migrate:create": "cd frontend && payload migrate:create"
+    "migrate:create": "cd frontend && payload migrate:create",
+    "seed": "cd frontend && payload run server/payload/seed.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",

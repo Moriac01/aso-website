@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+import type { KeyFigure } from "@/server/content/keyFigures";
+
 type CounterProps = {
   end: number;
   duration?: number;
@@ -12,13 +14,18 @@ function Counter({ end, duration = 2000 }: CounterProps) {
   const [count, setCount] = useState(0);
 
   const startCounting = () => {
+    // Valeur nulle, négative ou décimale saisie dans le back-office : affichage direct.
+    if (end <= 0 || !Number.isInteger(end)) {
+      setCount(end);
+      return;
+    }
     let start = 0;
-    const stepTime = Math.abs(Math.floor(duration / end));
+    const stepTime = Math.max(1, Math.floor(duration / end));
 
     const timer = setInterval(() => {
       start += 1;
       setCount(start);
-      if (start === end) clearInterval(timer);
+      if (start >= end) clearInterval(timer);
     }, stepTime);
   };
 
@@ -34,12 +41,10 @@ function Counter({ end, duration = 2000 }: CounterProps) {
   );
 }
 
-export default function Stats() {
-  const stats = [
-    { label: "Enfants soutenus", value: 50 },
-    { label: "Bénévoles actifs", value: 10 },
-    { label: "Projets en cours", value: 2 },
-  ];
+/** Chiffres clés gérés dans le back-office (/admin → Chiffres clés). */
+export default function Stats({ items }: { items: KeyFigure[] }) {
+  if (items.length === 0) return null;
+  const stats = items;
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-2  sm:px-8 lg:px-12 lg:py-3">
@@ -54,7 +59,8 @@ export default function Stats() {
             className="rounded-3xl border border-[#dfe7df] bg-white p-6 text-center shadow-[0_12px_30px_rgba(15,23,42,0.04)]"
           >
             <div className="text-4xl font-bold text-[#070707]">
-              <Counter end={s.value} duration={2000} />+
+              <Counter end={s.value} duration={2000} />
+              {s.suffix}
             </div>
             <div className="mt-3 text-sm font-medium uppercase tracking-[0.16em] text-[#526057]">
               {s.label}

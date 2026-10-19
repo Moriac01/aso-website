@@ -61,7 +61,15 @@ export default buildConfig({
   graphQL: { disable: true },
 
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URL || "" },
+    pool: {
+      connectionString: process.env.DATABASE_URL || "",
+      // Échouer vite plutôt que bloquer (build ou page) si la base ne répond pas.
+      connectionTimeoutMillis: 10_000,
+    },
+    // Pas de modification « à la volée » du schéma en développement :
+    // la structure de la base évolue uniquement par migrations versionnées
+    // (identique chez chaque développeur et en production).
+    push: false,
     migrationDir: path.resolve(dirname, "server/payload/migrations"),
     // En production, les migrations en attente sont appliquées au démarrage.
     prodMigrations: migrations,

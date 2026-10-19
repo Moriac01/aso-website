@@ -1,7 +1,8 @@
+import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { News } from "@/data/news";
+import type { NewsItem } from "@/services/news";
 
 const formatDate = (date: string) =>
   new Date(date).toLocaleDateString("fr-FR", {
@@ -10,7 +11,7 @@ const formatDate = (date: string) =>
     year: "numeric",
   });
 
-export function NewsDetail({ item }: { item: News }) {
+export function NewsDetail({ item }: { item: NewsItem }) {
   return (
     <article className="mx-auto max-w-4xl px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
       <div className="mb-6">
@@ -25,7 +26,7 @@ export function NewsDetail({ item }: { item: News }) {
       <div className="overflow-hidden rounded-[2rem] border border-[#dfe7df] bg-white shadow-[0_14px_35px_rgba(15,23,42,0.04)]">
         <Image
           src={item.image}
-          alt={item.title}
+          alt={item.imageAlt}
           width={1200}
           height={720}
           className="h-[320px] w-full object-cover sm:h-[420px]"
@@ -43,11 +44,10 @@ export function NewsDetail({ item }: { item: News }) {
             {item.title}
           </h1>
 
-          <div className="mt-8 space-y-5 text-base leading-8 text-[#2c3a34]">
-            {item.content.split("\n\n").map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
+          <RichText
+            data={item.content}
+            className="mt-8 space-y-5 text-base leading-8 text-[#2c3a34] [&_a]:text-[#0c7af8] [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-[#dfe7df] [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#070707] [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#070707] [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
+          />
         </div>
       </div>
     </article>

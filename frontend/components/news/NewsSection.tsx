@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import type { News } from "@/data/news";
+import type { NewsItem } from "@/services/news";
 
 import { NewsCard } from "@/components/news/NewsCard";
 
-export function NewsSection({ items }: { items: News[] }) {
+export function NewsSection({ items }: { items: NewsItem[] }) {
   if (items.length === 0) {
     return null;
   }
