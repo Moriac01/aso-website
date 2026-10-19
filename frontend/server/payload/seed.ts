@@ -99,6 +99,29 @@ if (!settings.legal?.registrationNumber) {
   log("Identité légale déjà renseignée : ignorée.");
 }
 
+// Moyens de don — Orange Money prévu, à compléter et activer par la Trésorerie.
+const donation = await payload.findGlobal({ slug: "donation-settings" });
+if (!donation.methods?.length) {
+  await payload.updateGlobal({
+    slug: "donation-settings",
+    context,
+    data: {
+      methods: [
+        {
+          label: "Orange Money",
+          kind: "mobile-money",
+          accountName: "Association Soutien aux Orphelins",
+          accountNumber: "",
+          instructions:
+            "Faites un transfert vers ce numéro depuis votre compte Orange Money, puis notez la référence indiquée dans le SMS de confirmation.",
+          active: false,
+        },
+      ],
+    },
+  });
+  log("Moyens de don préparés (Orange Money à compléter et activer dans /admin).");
+}
+
 // 2. Actualités — avec leurs images.
 const { totalDocs: newsCount } = await payload.count({ collection: "news" });
 if (newsCount === 0) {

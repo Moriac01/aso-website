@@ -10,6 +10,11 @@ import {
   volunteerSchema,
   type FormResult,
 } from "@/lib/validation/forms";
+import {
+  donationProjects,
+  donationSchema,
+  type DonationResult,
+} from "@/lib/validation/donation";
 
 type FormFailure = Extract<FormResult, { ok: false }>;
 
@@ -134,6 +139,43 @@ export async function submitVolunteerApplication(input: unknown): Promise<FormRe
     return { ok: true };
   } catch (error) {
     console.error("submitVolunteerApplication", error);
+    return SERVER_ERROR;
+  }
+}
+
+export async function submitDonation(input: unknown): Promise<DonationResult> {
+  // Un robot reçoit une fausse confirmation, sans rien enregistrer.
+  if (isBot(input)) return { ok: true, reference: "DON-0000-000000" };
+
+  const parsed = donationSchema.safeParse(input);
+  if (!parsed.success) return { ...INVALID, fieldErrors: toFieldErrors(parsed.error) };
+
+  const data = withoutHoneypot(parsed.data);
+
+  try {
+    const payload = await getPayload({ config });
+    const doc = await payload.create({
+      collection: "donations",
+      data: {
+        ...data,
+        donorName: data.anonymous ? "" : data.donorName,
+        status: "declared",
+      },
+      overrideAccess: true, // la collection refuse toute création via l'API publique
+    });
+    const reference = doc.reference ?? "";
+    const project = donationProjects.find((p) => p.value === data.project)?.label ?? data.project;
+    await notifyTeam(payload, `Don déclaré : ${data.amount.toLocaleString("fr-FR")} FCFA (${reference})`, [
+      `Montant : ${data.amount.toLocaleString("fr-FR")} FCFA via ${data.method}`,
+      `Référence de la transaction : ${data.transactionRef}`,
+      `Projet : ${project}`,
+      `Donateur : ${data.anonymous ? "anonyme" : data.donorName}${data.phone ? ` · ${data.phone}` : ""}${data.email ? ` · ${data.email}` : ""}`,
+      "",
+      "À vérifier sur le relevé avant de passer le don à « Reçu ».",
+    ]);
+    return { ok: true, reference };
+  } catch (error) {
+    console.error("submitDonation", error);
     return SERVER_ERROR;
   }
 }

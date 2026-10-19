@@ -91,6 +91,25 @@ Affiche automatiquement les rapports financiers **publiés et visés**, avec la 
 légale de l'association (Administration → Coordonnées & réseaux → Identité légale).
 Les PDF non publiés restent inaccessibles au public, même avec leur adresse exacte.
 
+## Dons (`/donate`)
+
+Version sans paiement en ligne, entièrement traçable :
+
+1. Le donateur envoie l'argent sur un compte de l'ASO affiché sur la page (Orange Money ;
+   virement bancaire à ajouter quand le compte sera ouvert).
+2. Il déclare son don : montant, référence de la transaction (SMS), projet soutenu, nom ou
+   don anonyme. Il reçoit une référence de don (ex. `DON-2026-7K3QXM`).
+3. Le don arrive dans **Transparence → Dons** avec le statut « Déclaré ». La Trésorerie vérifie
+   la réception sur le relevé et le passe à « Reçu » ou « Non retrouvé » (son nom et la date sont
+   enregistrés, l'action est inscrite au journal).
+
+Les informations déclarées (montant, référence, donateur…) sont figées : personne ne peut les
+modifier après coup. Lecture : Président, Trésorerie, Commissaire aux comptes.
+
+**Mettre en service** : Transparence → Moyens de don → Orange Money : saisir le numéro du compte
+**au nom de l'association**, cocher « Afficher sur le site ». Tant qu'aucun moyen n'est actif,
+la page affiche un message d'attente et pas de formulaire.
+
 ## Formulaires publics
 
 Contact, adhésion et bénévolat passent par des **Server Actions** (`server/actions/forms.ts`) :
