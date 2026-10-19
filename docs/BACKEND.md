@@ -117,11 +117,48 @@ Contact, adhésion et bénévolat passent par des **Server Actions** (`server/ac
 1. validation serveur avec les schémas Zod de `lib/validation/forms.ts` ;
 2. champ piège anti-robots (les envois de robots sont ignorés silencieusement) ;
 3. enregistrement dans le back-office (statut « Nouveau ») ;
-4. notification par email à l'adresse définie dans *Coordonnées & réseaux*
-   (sans service d'email configuré, l'email est seulement affiché dans la console).
+4. emails : alerte à l'équipe concernée et accusé de réception à la personne (voir « Emails »).
 
 Les collections de demandes refusent toute création via l'API publique : seules les
 Server Actions peuvent écrire.
+
+## Emails
+
+Envoyés par le compte **Gmail de l'association** (SMTP), après la réponse au visiteur :
+le formulaire reste rapide et un problème d'email ne fait jamais échouer une demande
+(il est seulement journalisé : `Email non envoyé`).
+
+| Événement | Équipe alertée | Email à la personne |
+|---|---|---|
+| Message de contact | Secrétariat (« Répondre » écrit directement au visiteur) | Accusé de réception |
+| Demande d'adhésion | Secrétariat, Mobilisation | Accusé de réception |
+| Candidature bénévole | Mobilisation, Secrétariat | Accusé de réception |
+| Don déclaré | Trésorerie | Confirmation avec la référence `DON-…` (si email donné) |
+| Don passé à « Reçu » | — | « Votre don est bien arrivé » (si email donné) |
+
+- **Destinataires des alertes** : les comptes actifs, au mandat en cours, qui ont le rôle
+  concerné, plus la boîte générale (Administration → Coordonnées & réseaux → « Email qui reçoit
+  les notifications »). Si personne n'a encore le rôle, les administrateurs sont prévenus.
+- **Sécurité** : les emails envoyés au public ne recopient jamais un texte saisi dans le
+  formulaire (sinon n'importe qui pourrait faire envoyer par l'ASO un message de son choix).
+  Tout texte saisi est échappé dans les emails de l'équipe.
+- Textes des emails : `server/email/messages.ts` ; mise en page : `server/email/layout.ts`.
+
+**Configurer Gmail** (une fois, avec le compte Gmail de l'ASO) :
+
+1. Compte Google → Sécurité → activer la **Validation en deux étapes**.
+2. Compte Google → Sécurité → **Mots de passe des applications** → créer « Site ASO » :
+   Google affiche un code de 16 lettres.
+3. Dans `frontend/.env` (et plus tard dans les variables d'environnement de l'hébergeur) :
+   ```bash
+   SMTP_USER=adresse.de.lassociation@gmail.com
+   SMTP_PASS=lecodede16lettres   # sans espaces
+   ```
+4. Redémarrez `bun dev`. Sans ces deux variables, les emails s'affichent seulement dans la console.
+
+Limite Gmail : environ 500 emails par jour, largement suffisant. Pour passer plus tard à un
+service avec nom de domaine (Resend, Brevo…), il suffit de changer `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASS` et `EMAIL_FROM` : aucun code à modifier.
 
 ## Modifier le schéma de données
 
@@ -177,7 +214,9 @@ puis relancez `bun run migrate`.
 - **Stockage des fichiers** : les images et PDF sont stockés sur le disque en local
   (`frontend/uploads/`, ignoré par Git). Sur Vercel, le disque n'est pas persistant :
   il faudra un stockage objet (ex. Vercel Blob ou S3) via un plugin Payload.
-- **Service d'email** (ex. Resend) pour les notifications.
+- **Emails** : renseigner `SMTP_USER` / `SMTP_PASS` (Gmail de l'ASO) chez l'hébergeur.
+- **Limiter le nombre d'envois par visiteur** (anti-abus des formulaires) une fois l'hébergeur
+  choisi (ex. règle de pare-feu Vercel).
 - Brancher les autres contenus encore écrits en dur (page Actions, chiffres de la page
   À propos, coordonnées du pied de page) sur le back-office.
 - Base Neon de production distincte de la base de développement.
