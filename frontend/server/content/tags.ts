@@ -6,4 +6,5 @@ export const CACHE_TAGS = {
   reports: "cms:reports",
   settings: "cms:settings",
   donation: "cms:donation",
+  home: "cms:home",
 } as const;

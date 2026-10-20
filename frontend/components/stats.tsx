@@ -43,6 +43,9 @@ function Counter({ end, duration = 2000 }: CounterProps) {
   );
 }
 
+// Autant de colonnes que de chiffres (jusqu'à 4 par ligne).
+const columns = ["", "sm:mx-auto sm:max-w-sm", "sm:grid-cols-2", "sm:grid-cols-3", "sm:grid-cols-2 lg:grid-cols-4"];
+
 /** Chiffres clés gérés dans le back-office (/admin → Chiffres clés). */
 export default function Stats({ items }: { items: KeyFigure[] }) {
   if (items.length === 0) return null;
@@ -50,7 +53,7 @@ export default function Stats({ items }: { items: KeyFigure[] }) {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-2  sm:px-8 lg:px-12 lg:py-3">
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className={`grid gap-4 ${columns[Math.min(stats.length, 4)]}`}>
         {stats.map((s) => (
           <motion.div
             key={s.label}

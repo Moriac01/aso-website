@@ -10,7 +10,7 @@ import { MotionProvider } from "@/components/MotionProvider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const description =
-  "L'Association Soutien aux Orphelins (ASO) accompagne les enfants orphelins de Bimbo et Bangui : scolarité, autonomie économique des mères veuves et soutien psychosocial.";
+  "L'Association Soutien aux Orphelins (ASO) accompagne les enfants orphelins de Bimbo et Bangui : scolarité, santé et soutien psychosocial.";
 
 export const metadata: Metadata = {
   // Adresse du site : sert aux aperçus de liens (WhatsApp, Facebook) et aux moteurs de recherche.

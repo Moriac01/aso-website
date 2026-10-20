@@ -102,11 +102,13 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    'home-page': HomePage;
     'key-figures': KeyFigure;
     'site-settings': SiteSetting;
     'donation-settings': DonationSetting;
   };
   globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'key-figures': KeyFiguresSelect<false> | KeyFiguresSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'donation-settings': DonationSettingsSelect<false> | DonationSettingsSelect<true>;
@@ -792,6 +794,61 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Textes de la page d'accueil. Chiffres clés, actualités et rapports financiers se gèrent dans leurs rubriques.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  hero?: {
+    title?: string | null;
+    subtitle?: string | null;
+    /**
+     * Sans photo choisie : la photo actuelle du site est conservée.
+     */
+    image?: (number | null) | Media;
+    caption?: string | null;
+  };
+  /**
+   * Laissé vide : le texte actuel du site s'affiche.
+   */
+  story?: string | null;
+  pillarsTitle?: string | null;
+  /**
+   * De 1 à 4 cartes. Sans photo choisie, la carte garde la photo actuelle du site à la même position (1re, 2e, 3e), ou une illustration.
+   */
+  pillars?:
+    | {
+        title: string;
+        text: string;
+        image?: (number | null) | Media;
+        /**
+         * Petite étiquette sur la carte. Ex. : « Lancement en décembre 2026 ».
+         */
+        badge?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  approach?: {
+    title?: string | null;
+    text?: string | null;
+    cards?:
+      | {
+          label: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  callToAction?: {
+    title?: string | null;
+    text?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Ces chiffres engagent la crédibilité de l'ASO : n'indiquez que des valeurs vérifiables.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -892,6 +949,53 @@ export interface DonationSetting {
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        image?: T;
+        caption?: T;
+      };
+  story?: T;
+  pillarsTitle?: T;
+  pillars?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        image?: T;
+        badge?: T;
+        id?: T;
+      };
+  approach?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        cards?:
+          | T
+          | {
+              label?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  callToAction?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

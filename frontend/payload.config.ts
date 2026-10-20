@@ -20,6 +20,7 @@ import { News } from "./server/payload/collections/News";
 import { TeamMembers } from "./server/payload/collections/TeamMembers";
 import { Users } from "./server/payload/collections/Users";
 import { DonationSettings } from "./server/payload/globals/DonationSettings";
+import { HomePage } from "./server/payload/globals/HomePage";
 import { KeyFigures } from "./server/payload/globals/KeyFigures";
 import { SiteSettings } from "./server/payload/globals/SiteSettings";
 
@@ -87,7 +88,7 @@ export default buildConfig({
     Users,
     AuditLog,
   ],
-  globals: [KeyFigures, SiteSettings, DonationSettings],
+  globals: [HomePage, KeyFigures, SiteSettings, DonationSettings],
 
   plugins: [
     /**

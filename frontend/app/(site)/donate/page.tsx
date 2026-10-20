@@ -54,8 +54,8 @@ export default async function DonatePage() {
                 Votre don, suivi jusqu’au bout.
               </h1>
               <p className="mt-5 max-w-xl text-base leading-8 text-[#526057] sm:text-lg">
-                Vos dons financent la scolarité des orphelins, les activités des mères veuves du
-                projet PAEMV et le soutien psychosocial des familles. Chaque don est vérifié par
+                Vos dons financent la scolarité des orphelins, leur accès aux soins et le soutien
+                psychosocial des familles. Chaque don est vérifié par
                 notre Trésorerie et figure dans nos rapports financiers publics.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -90,7 +90,7 @@ export default async function DonatePage() {
               <div className="mt-8 space-y-4">
                 {[
                   "La scolarité et le suivi de 10 orphelins",
-                  "Le fonds de roulement des mères veuves du projet PAEMV",
+                  "L’accès aux soins des enfants accompagnés",
                   "L’accompagnement psychosocial des enfants et des familles",
                 ].map((point) => (
                   <div key={point} className="flex items-start gap-3 rounded-2xl bg-[#f4f9f5] p-3">

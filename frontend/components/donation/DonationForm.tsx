@@ -8,7 +8,7 @@ import { HoneypotField } from "@/components/HoneypotField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { donationProjects, type DonationProject } from "@/lib/validation/donation";
+import { openDonationProjects, type DonationProject } from "@/lib/validation/donation";
 import { submitDonation } from "@/server/actions/forms";
 
 type Values = {
@@ -186,7 +186,7 @@ export function DonationForm({ methods }: { methods: string[] }) {
           onChange={(event) => update("project", event.target.value as DonationProject)}
           className={`h-10 w-full rounded-2xl border px-2.5 text-base outline-none ${fieldClass()}`}
         >
-          {donationProjects.map((project) => (
+          {openDonationProjects.map((project) => (
             <option key={project.value} value={project.value}>
               {project.label}
             </option>

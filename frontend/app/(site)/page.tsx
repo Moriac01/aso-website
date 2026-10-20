@@ -5,6 +5,7 @@ import { ArrowRight, Download, Sprout } from "lucide-react";
 import Hero from "@/components/Hero";
 import { NewsSection } from "@/components/news/NewsSection";
 import Stats from "@/components/stats";
+import { getHomeContent } from "@/server/content/home";
 import { getKeyFigures } from "@/server/content/keyFigures";
 import { getPublishedReports } from "@/server/content/transparency";
 import { getFeaturedNews } from "@/services/news";
@@ -13,24 +14,8 @@ import { getFeaturedNews } from "@/services/news";
 // (et immédiatement quand l'équipe publie depuis le back-office).
 export const revalidate = 300;
 
-// Les trois piliers d'action de l'ASO.
-const missions = [
-  {
-    title: "Éducation",
-    text: "Frais de scolarité, fournitures et suivi régulier des orphelins pris en charge, pour qu’ils réussissent à l’école.",
-    image: { src: "/edu.jpg", alt: "Enfants pendant le soutien scolaire" },
-  },
-  {
-    title: "Autonomisation économique",
-    text: "Projet PAEMV : un fonds de roulement et neuf mois d’accompagnement pour que des mères veuves lancent une activité génératrice de revenus.",
-    image: null,
-  },
-  {
-    title: "Soutien psychosocial",
-    text: "Un accompagnement pour aider les enfants et leurs familles à traverser le deuil et à reprendre confiance.",
-    image: { src: "/IMG-20250913-WA0016.jpg", alt: "Enfant assis contre un mur" },
-  },
-];
+// Nombre de colonnes des cartes « Nos actions » selon le nombre de piliers (1 à 4).
+const pillarColumns = ["", "md:grid-cols-1", "md:grid-cols-2", "md:grid-cols-3", "md:grid-cols-2 xl:grid-cols-4"];
 
 const formatSize = (bytes: number | null) => {
   if (!bytes) return null;
@@ -38,7 +23,8 @@ const formatSize = (bytes: number | null) => {
 };
 
 export default async function Home() {
-  const [featuredNews, keyFigures, reports] = await Promise.all([
+  const [home, featuredNews, keyFigures, reports] = await Promise.all([
+    getHomeContent(),
     getFeaturedNews(),
     getKeyFigures(),
     getPublishedReports(),
@@ -48,7 +34,7 @@ export default async function Home() {
   return (
     <main className="bg-[#f7faf6] text-[#070707]">
       <div className="pt-4 sm:pt-4 lg:pt-5">
-        <Hero />
+        <Hero content={home.hero} />
       </div>
 
       <section className="mx-auto max-w-3xl px-5 pt-10 text-center sm:px-8 sm:pt-6 lg:px-12 lg:pt-10">
@@ -56,8 +42,7 @@ export default async function Home() {
           Notre histoire
         </p>
         <p className="mt-2 text-lg leading-8 text-[#526057] sm:text-xl sm:leading-9">
-          Une équipe de jeunes professionnels, présidée par Emmanuel MADOUKOU, agit pour que chaque
-          enfant orphelin puisse étudier, grandir et se reconstruire.
+          {home.story}
         </p>
       </section>
 
@@ -72,12 +57,12 @@ export default async function Home() {
               Nos actions
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
-              Trois engagements pour l’avenir des enfants et de leurs familles.
+              {home.pillarsTitle}
             </h2>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {missions.map((item) => (
+          <div className={`grid gap-6 ${pillarColumns[Math.min(home.pillars.length, 4)]}`}>
+            {home.pillars.map((item) => (
               <article
                 key={item.title}
                 className="group overflow-hidden rounded-[1.5rem] border border-[#e3ecf4] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
@@ -95,7 +80,7 @@ export default async function Home() {
                       <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent" />
                     </>
                   ) : (
-                    // En attendant une photo du projet (prise avec l'accord des mères).
+                    // Pas encore de photo : illustration neutre.
                     <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#eef7ff] to-[#e3f5e8]">
                       <span className="flex size-20 items-center justify-center rounded-3xl bg-white text-[#1d9b4a] shadow-sm">
                         <Sprout className="size-10" aria-hidden="true" />
@@ -104,6 +89,11 @@ export default async function Home() {
                   )}
                 </div>
                 <div className="p-6">
+                  {item.badge ? (
+                    <span className="mb-3 inline-flex rounded-full bg-[#e3f5e8] px-3 py-1 text-xs font-semibold text-[#17683a]">
+                      {item.badge}
+                    </span>
+                  ) : null}
                   <h3 className="text-xl font-semibold text-[#070707]">{item.title}</h3>
                   <p className="mt-3 text-base leading-7 text-[#526057]">{item.text}</p>
                 </div>
@@ -123,39 +113,34 @@ export default async function Home() {
       </section>
 
       <section id="approche" className="bg-white py-16">
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:px-12">
+        <div
+          className={`mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:px-12 ${home.approach.cards.length > 0 ? "lg:grid-cols-[1.2fr_0.8fr]" : ""}`}
+        >
           <div className="rounded-[2rem] bg-[#0b1220] p-8 text-white shadow-[0_24px_60px_rgba(0,0,0,0.12)] sm:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#90cdf4]">
               Notre approche
             </p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              De l’aide d’urgence à l’autonomie.
+              {home.approach.title}
             </h2>
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-200">
-              Nous ne voulons pas seulement répondre aux besoins du jour. Nous construisons des
-              solutions qui durent : l’école pour les enfants, un revenu stable pour les mères.
+              {home.approach.text}
             </p>
           </div>
 
-          <div className="flex flex-col justify-between gap-6">
-            <div className="rounded-3xl border border-[#dfe7df] bg-[#f4f9f5] p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#0a67d0]">
-                Pour les mères
-              </p>
-              <p className="mt-3 text-xl font-bold leading-snug text-[#070707] sm:text-2xl">
-                Chaque mère du projet PAEMV reçoit un fonds de roulement et un suivi pendant neuf mois.
-              </p>
+          {home.approach.cards.length > 0 ? (
+            <div className="flex flex-col justify-center gap-6">
+              {home.approach.cards.map((card, index) => (
+                <div
+                  key={card.label + index}
+                  className={`rounded-3xl border border-[#dfe7df] p-6 ${index % 2 === 0 ? "bg-[#f4f9f5]" : "bg-white shadow-sm"}`}
+                >
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#0a67d0]">{card.label}</p>
+                  <p className="mt-3 text-xl font-bold leading-snug text-[#070707] sm:text-2xl">{card.text}</p>
+                </div>
+              ))}
             </div>
-
-            <div className="rounded-3xl border border-[#dfe7df] bg-white p-6 shadow-sm">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#0a67d0]">
-                Pour les enfants
-              </p>
-              <p className="mt-3 text-xl font-bold leading-snug text-[#070707] sm:text-2xl">
-                Scolarité payée, fournitures et suivi régulier, jusqu’à la réussite.
-              </p>
-            </div>
-          </div>
+          ) : null}
         </div>
       </section>
 
@@ -222,11 +207,10 @@ export default async function Home() {
             Agissez avec nous
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
-            Donnez un avenir à ceux qui en ont besoin.
+            {home.callToAction.title}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#526057]">
-            Votre don finance la scolarité des enfants et les activités des mères. Chaque don est
-            vérifié par notre Trésorerie et figure dans nos rapports financiers.
+            {home.callToAction.text}
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
