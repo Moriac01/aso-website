@@ -4,7 +4,10 @@ export interface Person {
   id: string;
   name: string;
   role: string;
-  photo: string;
+  /** Portrait (absent : les initiales s'affichent à la place). */
+  photo?: string;
+  /** Cadrage du portrait (CSS object-position), d'après le point focal choisi dans le back-office. */
+  photoPosition?: string;
   description?: string;
   type: PersonType;
 }

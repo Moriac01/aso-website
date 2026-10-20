@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { PersonCard } from "@/components/PersonCard";
+import { TeamSection } from "@/components/team/TeamSection";
 import { AboutAccordion } from "@/app/(site)/about/AboutAccordion";
 import { getTeam } from "@/server/content/team";
 
@@ -27,8 +27,6 @@ const values = [
 
 export default async function APropos() {
   const people = await getTeam();
-  const executives = people.filter((person) => person.type === "executive");
-  const community = people.filter((person) => person.type !== "executive");
 
   return (
     <main className="bg-[#f7faf6] text-[#070707]">
@@ -123,43 +121,7 @@ export default async function APropos() {
 
       <AboutAccordion />
 
-      {executives.length > 0 && (
-      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
-            Notre équipe
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
-            Notre bureau exécutif
-          </h2>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {executives.map((person) => (
-            <PersonCard key={person.id} person={person} />
-          ))}
-        </div>
-      </section>
-      )}
-
-      {community.length > 0 && (
-      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
-            La communauté ASO
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
-            Nos membres et bénévoles
-          </h2>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {community.map((person) => (
-            <PersonCard key={person.id} person={person} />
-          ))}
-        </div>
-      </section>
-      )}
+      {people.length > 0 && <TeamSection people={people} />}
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="rounded-[2rem] border border-[#dfe7df] bg-[#eef7ff] p-8 text-center shadow-sm sm:p-12">
