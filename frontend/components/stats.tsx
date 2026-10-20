@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 import type { KeyFigure } from "@/server/content/keyFigures";
 
@@ -12,10 +12,12 @@ type CounterProps = {
 
 function Counter({ end, duration = 2000 }: CounterProps) {
   const [count, setCount] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   const startCounting = () => {
-    // Valeur nulle, négative ou décimale saisie dans le back-office : affichage direct.
-    if (end <= 0 || !Number.isInteger(end)) {
+    // Valeur nulle, négative ou décimale saisie dans le back-office, ou animations
+    // désactivées sur l'appareil : affichage direct.
+    if (reduceMotion || end <= 0 || !Number.isInteger(end)) {
       setCount(end);
       return;
     }
@@ -52,7 +54,7 @@ export default function Stats({ items }: { items: KeyFigure[] }) {
         {stats.map((s) => (
           <motion.div
             key={s.label}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
