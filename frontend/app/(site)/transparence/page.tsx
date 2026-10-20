@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+  new Date(date).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric", timeZone: "Africa/Bangui" });
 
 const formatSize = (bytes: number | null) => {
   if (!bytes) return null;

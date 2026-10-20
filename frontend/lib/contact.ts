@@ -29,6 +29,14 @@ export function phoneDigits(phone: string): string {
 
 export const phoneHref = (phone: string) => `tel:${phoneDigits(phone)}`;
 
+/** Affichage lisible : « 70107514 » ou « +23670107514 » → « +236 70 10 75 14 ». Autres formats : tels que saisis. */
+export function formatPhone(phone: string): string {
+  const full = phoneDigits(phone);
+  const local = full.startsWith(`+${CAR_PREFIX}`) ? full.slice(CAR_PREFIX.length + 1) : null;
+  if (local && local.length === 8) return `+${CAR_PREFIX} ${local.match(/\d{2}/g)!.join(" ")}`;
+  return phone.trim();
+}
+
 export const mapsHref = (address: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.replace(/\s+/g, " ").trim())}`;
 
