@@ -1,6 +1,6 @@
 import type { GlobalConfig } from "payload";
 
-import { CONTENT_EDITORS, READERS, allow, anyone, hiddenUnless } from "../access";
+import { CONTENT_EDITORS, READERS, allow, anyone, hiddenUnless, rolesOf } from "../access";
 import { auditGlobal } from "../hooks/audit";
 import { CACHE_TAGS } from "@/server/content/tags";
 import { revalidateGlobal } from "../hooks/revalidate";
@@ -47,6 +47,8 @@ export const KeyFigures: GlobalConfig = {
           name: "source",
           label: "Source / justification (interne)",
           type: "text",
+          // Interne : jamais renvoyé par l'API publique.
+          access: { read: ({ req }) => rolesOf(req.user).length > 0 },
           admin: { description: "Ex. : « Bulletins scolaires 2025-2026 ». Non affiché." },
         },
       ],

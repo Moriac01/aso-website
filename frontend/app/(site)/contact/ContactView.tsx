@@ -5,7 +5,6 @@ import { useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
-  Clock3,
   Globe,
   Mail,
   MapPin,
@@ -21,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { HoneypotField } from "@/components/HoneypotField";
-import { mapsHref, phoneHref, type ContactInfo, type SocialNetwork } from "@/lib/contact";
+import { mapsHref, phoneHref, type ContactInfo, type SocialNetwork, formatPhone } from "@/lib/contact";
 import { submitContactMessage } from "@/server/actions/forms";
 
 type ContactFormValues = {
@@ -49,17 +48,17 @@ function contactDetailsOf({ phone, email, address }: ContactInfo) {
   return [
     phone && {
       label: "Téléphone",
-      value: phone,
+      value: formatPhone(phone),
       href: phoneHref(phone),
       icon: Phone,
-      accent: "bg-[#eaf6ff] text-[#0c7af8]",
+      accent: "bg-[#eaf6ff] text-[#0a67d0]",
     },
     email && {
       label: "Email",
       value: email,
       href: `mailto:${email}`,
       icon: Mail,
-      accent: "bg-[#eef7ff] text-[#0c7af8]",
+      accent: "bg-[#eef7ff] text-[#0a67d0]",
     },
     address && {
       label: "Adresse",
@@ -153,7 +152,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
         <div className="rounded-[2rem] border border-[#dfe7df] bg-gradient-to-br from-white via-[#f8fbff] to-[#eef7ff] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-8 lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
                 Contact
               </p>
               <h1 className="mt-4 text-4xl font-black tracking-tight text-[#070707] sm:text-5xl">
@@ -167,7 +166,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
 
             <div className="rounded-[1.75rem] border border-[#dfe7df] bg-white p-6 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                   <MessageSquareText className="size-6" />
                 </div>
                 <div>
@@ -201,7 +200,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="space-y-5">
             <div className="mb-2 max-w-xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
                 Coordonnées
               </p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -226,7 +225,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
                     <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#526057]">
                       {label}
                     </p>
-                    <p className="mt-2 whitespace-pre-line text-base font-medium text-[#070707] group-hover:text-[#0c7af8]">
+                    <p className="mt-2 whitespace-pre-line text-base font-medium text-[#070707] group-hover:text-[#0a67d0]">
                       {value}
                     </p>
                   </div>
@@ -234,26 +233,11 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
               </a>
             ))}
 
-            <div className="rounded-[1.5rem] border border-[#dfe7df] bg-white p-5 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#eef7ff] text-[#0c7af8]">
-                  <Clock3 className="size-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#526057]">
-                    Horaires
-                  </p>
-                  <p className="mt-2 text-base font-medium text-[#070707]">
-                    Les horaires seront communiqués prochainement.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="rounded-[2rem] border border-[#dfe7df] bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.04)] sm:p-7 lg:p-8">
             <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
                 Envoyez-nous un message
               </p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -354,11 +338,11 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
                     checked={form.consent}
                     onChange={(event) => updateField("consent", event.target.checked)}
                     aria-invalid={Boolean(errors.consent)}
-                    className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0c7af8] focus:ring-[#0c7af8]"
+                    className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0a67d0] focus:ring-[#0a67d0]"
                   />
                   <span>
                     J&apos;accepte que les informations fournies soient utilisées pour répondre à ma demande. Voir notre{" "}
-                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0a67d0] underline-offset-2 hover:underline">
                       politique de confidentialité
                     </Link>
                     .
@@ -376,7 +360,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
               <Button
                 type="submit"
                 disabled={isSending}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#0a67d0]"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#08529f]"
               >
                 {isSending ? "Envoi en cours…" : "Envoyer le message"}
                 <Send className="size-4" />
@@ -397,7 +381,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="rounded-[2rem] border border-[#dfe7df] bg-[#eef7ff] p-8 text-center shadow-sm sm:p-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
             Vous souhaitez nous rejoindre ?
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -406,7 +390,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/volunteers"
-              className="inline-flex items-center gap-2 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#08529f]"
             >
               Devenir membre / bénévole
               <ArrowRight className="size-4" />
@@ -418,15 +402,24 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
       <section className="mx-auto max-w-7xl px-5 pb-16 sm:px-8 lg:px-12 lg:pb-20">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[2rem] border border-[#dfe7df] bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
               Suivez-nous
             </p>
             <h3 className="mt-3 text-2xl font-bold text-[#070707]">Restez informé de nos actions.</h3>
             <p className="mt-3 text-base leading-7 text-[#526057]">
               {contact.socials.length > 0
                 ? "Suivez nos actions et nos nouvelles sur nos réseaux officiels."
-                : "Les réseaux sociaux officiels de l’ASO seront publiés prochainement."}
+                : "Nos descentes de terrain, nos projets et nos appels sont publiés dans nos actualités."}
             </p>
+            {contact.socials.length === 0 ? (
+              <Link
+                href="/news"
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#0a67d0] px-5 py-2.5 text-sm font-semibold text-[#0a67d0] transition hover:bg-[#0a67d0] hover:text-white"
+              >
+                Lire nos actualités
+                <ArrowRight className="size-4" />
+              </Link>
+            ) : null}
 
             {contact.socials.length > 0 ? (
               <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -438,7 +431,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
                       href={href}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-2 rounded-full border border-[#dfe7df] bg-[#f7faf6] px-3 py-2 text-sm text-[#526057] transition hover:border-[#0c7af8] hover:text-[#0c7af8]"
+                      className="flex items-center gap-2 rounded-full border border-[#dfe7df] bg-[#f7faf6] px-3 py-2 text-sm text-[#526057] transition hover:border-[#0a67d0] hover:text-[#0a67d0]"
                     >
                       <Icon className="size-4" />
                       <span>{label}</span>
@@ -450,7 +443,7 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
           </div>
 
           <div className="rounded-[2rem] border border-[#dfe7df] bg-[#f4f9f5] p-6 shadow-sm sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
               Où nous trouver ?
             </p>
             <h3 className="mt-3 text-2xl font-bold text-[#070707]">Notre adresse</h3>
@@ -458,22 +451,13 @@ export function ContactView({ contact }: { contact: ContactInfo }) {
               {contact.address ?? "Bangui, République centrafricaine"}
             </p>
 
-            <div className="mt-6 rounded-[1.5rem] border border-dashed border-[#bfd0cf] bg-white p-6">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
-                <MapPin className="size-6" />
-              </div>
-              <p className="mt-4 text-sm text-[#526057]">
-                Emplacement dédié à une future carte interactive et à une meilleure localisation.
-              </p>
-            </div>
-
             {mapLink ? (
             <div className="mt-6">
               <a
                 href={mapLink}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-[#0c7af8] px-6 py-3 text-sm font-semibold text-[#0c7af8] transition hover:bg-[#0c7af8] hover:text-white"
+                className="inline-flex items-center gap-2 rounded-full border border-[#0a67d0] px-6 py-3 text-sm font-semibold text-[#0a67d0] transition hover:bg-[#0a67d0] hover:text-white"
               >
                 Voir l&apos;itinéraire
                 <ArrowRight className="size-4" />

@@ -52,7 +52,7 @@ export function TeamSection({ people }: { people: Person[] }) {
     <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12 lg:py-20">
       <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-16">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">Notre équipe</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">Notre équipe</p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl lg:text-[44px] lg:leading-[1.12]">
             Les femmes et les hommes qui font vivre l&apos;ASO
           </h2>
@@ -87,8 +87,8 @@ export function TeamSection({ people }: { people: Person[] }) {
                 onKeyDown={(event) => onTabKeyDown(event, position)}
                 className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-0.5 py-3 text-sm transition sm:py-3.5 sm:text-[15px] ${
                   selected
-                    ? "border-[#0c7af8] font-semibold text-[#070707]"
-                    : "border-transparent font-medium text-[#6b776f] hover:text-[#070707]"
+                    ? "border-[#0a67d0] font-semibold text-[#070707]"
+                    : "border-transparent font-medium text-[#5b6760] hover:text-[#070707]"
                 }`}
               >
                 {group.label}

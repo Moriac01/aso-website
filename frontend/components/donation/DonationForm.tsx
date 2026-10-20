@@ -107,7 +107,7 @@ export function DonationForm({ methods }: { methods: string[] }) {
         <button
           type="button"
           onClick={() => setReference(null)}
-          className="mt-5 text-sm font-semibold text-[#0c7af8] transition hover:text-[#0a67d0]"
+          className="mt-5 text-sm font-semibold text-[#0a67d0] transition hover:text-[#08529f]"
         >
           Déclarer un autre don
         </button>
@@ -199,7 +199,7 @@ export function DonationForm({ methods }: { methods: string[] }) {
           type="checkbox"
           checked={form.anonymous}
           onChange={(event) => update("anonymous", event.target.checked)}
-          className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0c7af8] focus:ring-[#0c7af8]"
+          className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0a67d0] focus:ring-[#0a67d0]"
         />
         <span>Je souhaite faire un don anonyme</span>
       </label>
@@ -275,12 +275,12 @@ export function DonationForm({ methods }: { methods: string[] }) {
             checked={form.consent}
             onChange={(event) => update("consent", event.target.checked)}
             aria-invalid={Boolean(errors.consent)}
-            className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0c7af8] focus:ring-[#0c7af8]"
+            className="mt-1 h-4 w-4 rounded border-[#c8d4cf] text-[#0a67d0] focus:ring-[#0a67d0]"
           />
           <span>
             J&apos;accepte que ces informations soient utilisées pour vérifier mon don et m&apos;en
             confirmer la réception. Voir notre{" "}
-            <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+            <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0a67d0] underline-offset-2 hover:underline">
               politique de confidentialité
             </Link>
             .
@@ -298,7 +298,7 @@ export function DonationForm({ methods }: { methods: string[] }) {
       <Button
         type="submit"
         disabled={isSending}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#0a67d0]"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#08529f]"
       >
         {isSending ? "Envoi en cours…" : "Déclarer mon don"}
         <Send className="size-4" aria-hidden="true" />

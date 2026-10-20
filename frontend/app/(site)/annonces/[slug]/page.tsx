@@ -8,12 +8,17 @@ import { CopyButton } from "@/components/actions/CopyButton";
 import { mailtoHref, viewAnnouncement } from "@/lib/announcements";
 import { formatDay } from "@/lib/dates";
 import { whatsappHref } from "@/lib/contact";
-import { getAnnouncementBySlug } from "@/server/content/actions";
+import { getAnnouncementBySlug, getAnnouncements } from "@/server/content/actions";
 import { getContactInfo } from "@/server/content/contact";
 
 export const revalidate = 300;
 
 type Props = { params: Promise<{ slug: string }> };
+
+/** Pages d'annonces préparées à l'avance (les nouvelles s'ajoutent à la première visite). */
+export async function generateStaticParams() {
+  return (await getAnnouncements()).map((item) => ({ slug: item.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

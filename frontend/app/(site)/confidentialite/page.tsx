@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 const UPDATED_AT = "16 octobre 2026";
 
-const linkClass = "font-semibold text-[#0c7af8] hover:text-[#0a67d0]";
+const linkClass = "font-semibold text-[#0a67d0] hover:text-[#08529f]";
 
 /** Tableau simple, lisible sur téléphone (les lignes deviennent des cartes). */
 function Table({ head, rows }: { head: string[]; rows: string[][] }) {

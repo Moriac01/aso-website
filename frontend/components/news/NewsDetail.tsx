@@ -17,7 +17,7 @@ export function NewsDetail({ item }: { item: NewsItem }) {
       <div className="mb-6">
         <Link
           href="/news"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#0c7af8] transition hover:text-[#0a67d0]"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#0a67d0] transition hover:text-[#08529f]"
         >
           ← Retour aux actualités
         </Link>
@@ -34,7 +34,7 @@ export function NewsDetail({ item }: { item: NewsItem }) {
 
         <div className="p-6 sm:p-8 lg:p-10">
           <div className="flex flex-wrap items-center gap-3 text-sm text-[#526057]">
-            <span className="inline-flex rounded-full bg-[#eef7ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#0c7af8]">
+            <span className="inline-flex rounded-full bg-[#eef7ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#0a67d0]">
               {item.category}
             </span>
             <time dateTime={item.publishedAt}>{formatDate(item.publishedAt)}</time>
@@ -46,7 +46,7 @@ export function NewsDetail({ item }: { item: NewsItem }) {
 
           <RichText
             data={item.content}
-            className="mt-8 space-y-5 text-base leading-8 text-[#2c3a34] [&_a]:text-[#0c7af8] [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-[#dfe7df] [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#070707] [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#070707] [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
+            className="mt-8 space-y-5 text-base leading-8 text-[#2c3a34] [&_a]:text-[#0a67d0] [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-[#dfe7df] [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#070707] [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#070707] [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
           />
         </div>
       </div>

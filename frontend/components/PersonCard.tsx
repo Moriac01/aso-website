@@ -66,7 +66,7 @@ export function PersonCard({ person, onOpen }: { person: Person; onOpen: () => v
           type="button"
           onClick={onOpen}
           aria-haspopup="dialog"
-          className="text-left after:absolute after:inset-0 after:rounded-[1.125rem] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-[#0c7af8] focus-visible:after:ring-offset-4 focus-visible:after:ring-offset-[#f7faf6] md:after:rounded-3xl"
+          className="text-left after:absolute after:inset-0 after:rounded-[1.125rem] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-[#0a67d0] focus-visible:after:ring-offset-4 focus-visible:after:ring-offset-[#f7faf6] md:after:rounded-3xl"
         >
           {person.name}
           <span className="sr-only"> — voir le profil</span>

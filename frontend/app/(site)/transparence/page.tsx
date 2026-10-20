@@ -67,7 +67,7 @@ export default async function TransparencePage() {
         <div className="rounded-[2rem] bg-gradient-to-br from-[#eaf6ff] via-white to-[#f2f8ee] p-8 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-10 lg:p-14">
           <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
                 Transparence
               </p>
               <h1 className="mt-4 text-4xl font-black tracking-tight text-[#070707] sm:text-5xl">
@@ -82,14 +82,14 @@ export default async function TransparencePage() {
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
                   href="#rapports"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#08529f]"
                 >
                   Voir les rapports
                   <ArrowRight size={16} />
                 </a>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#0c7af8] px-6 py-3 text-sm font-semibold text-[#088efc] transition hover:bg-[#0c7af8] hover:text-white"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#0a67d0] px-6 py-3 text-sm font-semibold text-[#0a67d0] transition hover:bg-[#0a67d0] hover:text-white"
                 >
                   Poser une question
                 </Link>
@@ -98,7 +98,7 @@ export default async function TransparencePage() {
 
             <div className="rounded-[2rem] border border-[#dfe7df] bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                   <ShieldCheck size={22} />
                 </div>
                 <div>
@@ -126,7 +126,7 @@ export default async function TransparencePage() {
 
       <section id="rapports" className="mx-auto max-w-7xl scroll-mt-8 px-5 pb-16 sm:px-8 lg:px-12">
         <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
             Rapports financiers
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -150,7 +150,7 @@ export default async function TransparencePage() {
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-sky-100 text-sky-700">
                     <FileText size={24} />
                   </div>
-                  <span className="inline-flex rounded-full bg-[#eef7ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#0c7af8]">
+                  <span className="inline-flex rounded-full bg-[#eef7ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#0a67d0]">
                     {report.period ? `${report.year} · ${report.period}` : report.year}
                   </span>
                 </div>
@@ -176,7 +176,7 @@ export default async function TransparencePage() {
                       href={report.fileUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-[#0c7af8] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#0a67d0] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#08529f]"
                     >
                       <Download size={16} aria-hidden="true" />
                       Télécharger le PDF
@@ -195,7 +195,7 @@ export default async function TransparencePage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
           <div className="mb-8 max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
               Notre méthode
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -224,7 +224,7 @@ export default async function TransparencePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] [&>*]:min-w-0">
           <div className="rounded-[2rem] bg-[#0b1220] p-8 text-white shadow-[0_24px_60px_rgba(0,0,0,0.12)] sm:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#90cdf4]">
               Association reconnue
@@ -240,7 +240,7 @@ export default async function TransparencePage() {
 
           <div className="rounded-[2rem] border border-[#dfe7df] bg-white p-6 shadow-sm sm:p-8">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                 <Landmark size={22} />
               </div>
               <p className="text-xl font-bold text-[#070707]">Informations légales</p>
@@ -256,16 +256,16 @@ export default async function TransparencePage() {
               ]
                 .filter((row): row is [string, string] => Boolean(row[1]))
                 .map(([label, value]) => (
-                  <div key={label} className="grid gap-1 py-3 sm:grid-cols-[12rem_1fr] sm:gap-4">
+                  <div key={label} className="grid min-w-0 gap-1 py-3 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-4">
                     <dt className="text-sm font-medium text-[#526057]">{label}</dt>
-                    <dd className="break-words text-[#070707]">{value}</dd>
+                    <dd className="min-w-0 text-[#070707] [overflow-wrap:anywhere]">{value}</dd>
                   </div>
                 ))}
             </dl>
 
             <Link
               href="/about"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#0c7af8] transition hover:text-[#0a67d0]"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#0a67d0] transition hover:text-[#08529f]"
             >
               Découvrir le Bureau Exécutif
               <ArrowRight size={16} />
@@ -276,7 +276,7 @@ export default async function TransparencePage() {
 
       <section className="mx-auto max-w-7xl px-5 pb-16 sm:px-8 lg:px-12">
         <div className="rounded-[2rem] border border-[#dfe7df] bg-[#eef7ff] p-8 text-center sm:p-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
             Une question sur nos comptes ?
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -289,13 +289,13 @@ export default async function TransparencePage() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+              className="rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#08529f]"
             >
               Nous contacter
             </Link>
             <Link
               href="/actions"
-              className="rounded-full border border-[#0c7af8] px-6 py-3 text-sm font-semibold text-[#088efc] transition hover:bg-[#0c7af8] hover:text-white"
+              className="rounded-full border border-[#0a67d0] px-6 py-3 text-sm font-semibold text-[#0a67d0] transition hover:bg-[#0a67d0] hover:text-white"
             >
               Découvrir nos actions
             </Link>

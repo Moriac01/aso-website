@@ -63,7 +63,7 @@ export function MembershipBlock({ membership, whatsapp }: { membership: Membersh
             href={notifyHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1d9b4a] px-6 text-[15px] font-semibold text-white transition hover:bg-[#17803d] sm:w-auto"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#17803d] px-6 text-[15px] font-semibold text-white transition hover:bg-[#136b33] sm:w-auto"
           >
             <BellRing className="size-4" aria-hidden="true" />
             {state === "ended" ? "Nous écrire sur WhatsApp" : "Être prévenu sur WhatsApp"}

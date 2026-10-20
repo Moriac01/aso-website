@@ -65,7 +65,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
 
   const activeCardClass = useMemo(
     () =>
-      "border-[#0c7af8] bg-[#eef7ff] shadow-md ring-2 ring-[#cfe8ff]",
+      "border-[#0a67d0] bg-[#eef7ff] shadow-md ring-2 ring-[#cfe8ff]",
     [],
   );
 
@@ -124,7 +124,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
         <div className="rounded-[2rem] border border-[#dfe7df] bg-gradient-to-br from-white via-[#f8fbff] to-[#eef7ff] p-6 shadow-lg sm:p-8 lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
                 REJOIGNEZ-NOUS
               </p>
               <h1 className="mt-4 text-4xl font-bold tracking-tight text-[#070707] sm:text-5xl">
@@ -139,7 +139,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
               <Button
                 type="button"
                 asChild
-                className="mt-8 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a67d0]"
+                className="mt-8 rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white hover:bg-[#08529f]"
               >
                 <a href="#engagement-choice">
                   Faire le premier pas
@@ -150,7 +150,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
 
             <div className="rounded-[1.75rem] border border-[#dfe7df] bg-white p-6 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                   <HeartHandshake className="size-6" />
                 </div>
                 <div>
@@ -182,7 +182,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
 
       <section id="engagement-choice" className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
         <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
             Engagement
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -214,7 +214,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
                 key={type}
                 className={`rounded-[1.75rem] border p-6 transition-all duration-200 ${selected ? activeCardClass : "border-[#dfe7df] bg-white shadow-sm"}`}
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                   <Icon className="size-6" />
                 </div>
 
@@ -224,7 +224,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
                 <Button
                   type="button"
                   onClick={() => setSelectedType(type)}
-                  className={`mt-6 rounded-full px-5 py-3 text-sm font-semibold ${selected ? "bg-[#0c7af8] text-white hover:bg-[#0a67d0]" : "border border-[#0c7af8] bg-white text-[#088efc] hover:bg-[#0c7af8] hover:text-white"}`}
+                  className={`mt-6 rounded-full px-5 py-3 text-sm font-semibold ${selected ? "bg-[#0a67d0] text-white hover:bg-[#08529f]" : "border border-[#0a67d0] bg-white text-[#0a67d0] hover:bg-[#0a67d0] hover:text-white"}`}
                 >
                   {title}
                 </Button>
@@ -240,7 +240,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
         ) : (
           <div className="rounded-[2rem] border border-[#dfe7df] bg-white p-6 shadow-sm sm:p-8 lg:p-10">
             <div className="mb-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
                 Devenir bénévole
               </p>
               <h3 className="mt-3 text-3xl font-bold tracking-tight text-[#070707]">
@@ -408,11 +408,11 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
                     type="checkbox"
                     checked={volunteerForm.consent}
                     onChange={(event) => handleVolunteerChange("consent", event.target.checked)}
-                    className="mt-1 h-4 w-4 rounded border-[#b7c7b9] text-[#0c7af8] focus:ring-[#0c7af8]"
+                    className="mt-1 h-4 w-4 rounded border-[#b7c7b9] text-[#0a67d0] focus:ring-[#0a67d0]"
                   />
                   <span>
                     J&apos;accepte que les informations fournies soient utilisées dans le cadre du traitement de ma demande. Voir notre{" "}
-                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0c7af8] underline-offset-2 hover:underline">
+                    <Link href="/confidentialite" target="_blank" className="font-semibold text-[#0a67d0] underline-offset-2 hover:underline">
                       politique de confidentialité
                     </Link>
                     .
@@ -437,7 +437,7 @@ export default function VolunteersView({ membership }: { membership: ReactNode }
               ) : null}
 
               <div className="flex justify-end">
-                <Button type="submit" disabled={isSending} className="rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0a67d0]">
+                <Button type="submit" disabled={isSending} className="rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white hover:bg-[#08529f]">
                   {isSending ? "Envoi en cours…" : "Envoyer ma demande"}
                   <ArrowRight className="ml-2 size-4" />
                 </Button>

@@ -25,7 +25,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
 
       <div className="p-6">
         <div className="flex items-center justify-between gap-4">
-          <span className="inline-flex rounded-full bg-[#eef7ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#0c7af8]">
+          <span className="inline-flex rounded-full bg-[#eef7ff] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#0a67d0]">
             {item.category}
           </span>
           <span className="text-xs text-[#526057]">{formatDate(item.publishedAt)}</span>
@@ -37,7 +37,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
         <div className="mt-6">
           <Link
             href={`/news/${item.slug}`}
-            className="inline-flex items-center gap-2 rounded-full bg-[#0c7af8] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#0a67d0] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#08529f]"
           >
             Lire la suite
           </Link>

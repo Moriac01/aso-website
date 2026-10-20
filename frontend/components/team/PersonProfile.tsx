@@ -97,14 +97,14 @@ export function PersonProfile({
                 <button
                   type="button"
                   onClick={onPrevious}
-                  className="rounded-full border border-[#dfe7df] px-4 py-2.5 text-sm font-medium transition hover:border-[#0c7af8] hover:text-[#0a67d0]"
+                  className="rounded-full border border-[#dfe7df] px-4 py-2.5 text-sm font-medium transition hover:border-[#0a67d0] hover:text-[#08529f]"
                 >
                   <span aria-hidden="true">← </span>Précédent
                 </button>
                 <button
                   type="button"
                   onClick={onNext}
-                  className="rounded-full border border-[#dfe7df] px-4 py-2.5 text-sm font-medium transition hover:border-[#0c7af8] hover:text-[#0a67d0]"
+                  className="rounded-full border border-[#dfe7df] px-4 py-2.5 text-sm font-medium transition hover:border-[#0a67d0] hover:text-[#08529f]"
                 >
                   Suivant<span aria-hidden="true"> →</span>
                 </button>

@@ -35,7 +35,7 @@ const socialIcons: Record<SocialNetwork, LucideIcon> = {
 
 const headingClass = "text-[13px] font-semibold uppercase tracking-[0.14em] text-[#17483b]";
 // Sur téléphone, chaque lien fait 44 px de haut : facile à toucher du doigt.
-const linkClass = "block py-3 text-[15px] text-[#3d5249] transition-colors hover:text-[#0a67d0] md:py-1.5";
+const linkClass = "block py-3 text-[15px] text-[#3d5249] transition-colors hover:text-[#08529f] md:py-1.5";
 
 const formatDate = (date: string | null) =>
   date ? new Date(date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Bangui" }) : null;
@@ -77,7 +77,7 @@ const Footer = async () => {
             </p>
             <Link
               href="/donate"
-              className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0c7af8] px-6 text-[15px] font-semibold text-white transition hover:bg-[#0a67d0] sm:w-auto"
+              className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0a67d0] px-6 text-[15px] font-semibold text-white transition hover:bg-[#08529f] sm:w-auto"
             >
               Faire un don
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -125,7 +125,7 @@ const Footer = async () => {
                   return (
                     <li key={label}>
                       {href ? (
-                        <a href={href} className={`${rowClass} transition-colors hover:text-[#0a67d0]`}>
+                        <a href={href} className={`${rowClass} transition-colors hover:text-[#08529f]`}>
                           {content}
                         </a>
                       ) : (
@@ -151,7 +151,7 @@ const Footer = async () => {
                       href={href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex h-11 items-center gap-2 rounded-full border border-[#d9e0d5] px-[18px] text-sm font-medium text-[#17483b] transition hover:border-[#0c7af8] hover:text-[#0a67d0]"
+                      className="inline-flex h-11 items-center gap-2 rounded-full border border-[#d9e0d5] px-[18px] text-sm font-medium text-[#17483b] transition hover:border-[#0a67d0] hover:text-[#08529f]"
                     >
                       <Icon className="size-4" aria-hidden="true" />
                       {label}
@@ -176,10 +176,10 @@ const Footer = async () => {
             ) : null}
           </div>
           <div className="flex shrink-0 gap-2 font-medium text-[#3d5249] md:gap-6">
-            <Link href="/mentions-legales" className="px-2.5 py-3 transition-colors hover:text-[#0a67d0] md:p-0">
+            <Link href="/mentions-legales" className="px-2.5 py-3 transition-colors hover:text-[#08529f] md:p-0">
               Mentions légales
             </Link>
-            <Link href="/confidentialite" className="px-2.5 py-3 transition-colors hover:text-[#0a67d0] md:p-0">
+            <Link href="/confidentialite" className="px-2.5 py-3 transition-colors hover:text-[#08529f] md:p-0">
               Confidentialité
             </Link>
           </div>
