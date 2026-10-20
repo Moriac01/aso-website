@@ -10,6 +10,7 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 
 import { migrations } from "./server/payload/migrations";
+import { Announcements } from "./server/payload/collections/Announcements";
 import { Applications } from "./server/payload/collections/Applications";
 import { Donations } from "./server/payload/collections/Donations";
 import { AuditLog } from "./server/payload/collections/AuditLog";
@@ -20,7 +21,9 @@ import { News } from "./server/payload/collections/News";
 import { TeamMembers } from "./server/payload/collections/TeamMembers";
 import { Users } from "./server/payload/collections/Users";
 import { DonationSettings } from "./server/payload/globals/DonationSettings";
+import { ActionsPage } from "./server/payload/globals/ActionsPage";
 import { HomePage } from "./server/payload/globals/HomePage";
+import { Membership } from "./server/payload/globals/Membership";
 import { KeyFigures } from "./server/payload/globals/KeyFigures";
 import { SiteSettings } from "./server/payload/globals/SiteSettings";
 
@@ -76,6 +79,7 @@ export default buildConfig({
   collections: [
     // Contenu
     News,
+    Announcements,
     TeamMembers,
     Media,
     // Transparence
@@ -88,7 +92,7 @@ export default buildConfig({
     Users,
     AuditLog,
   ],
-  globals: [HomePage, KeyFigures, SiteSettings, DonationSettings],
+  globals: [HomePage, ActionsPage, Membership, KeyFigures, SiteSettings, DonationSettings],
 
   plugins: [
     /**

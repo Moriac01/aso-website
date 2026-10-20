@@ -3,6 +3,9 @@ import Image from "next/image";
 import { ArrowRight, Download, Sprout } from "lucide-react";
 
 import Hero from "@/components/Hero";
+import { HomeBanner } from "@/components/HomeBanner";
+import { homeBanner } from "@/lib/announcements";
+import { getAnnouncements } from "@/server/content/actions";
 import { NewsSection } from "@/components/news/NewsSection";
 import Stats from "@/components/stats";
 import { getHomeContent } from "@/server/content/home";
@@ -23,16 +26,21 @@ const formatSize = (bytes: number | null) => {
 };
 
 export default async function Home() {
-  const [home, featuredNews, keyFigures, reports] = await Promise.all([
+  const [home, featuredNews, keyFigures, reports, announcements] = await Promise.all([
     getHomeContent(),
     getFeaturedNews(),
     getKeyFigures(),
     getPublishedReports(),
+    getAnnouncements(),
   ]);
+  const banner = homeBanner(announcements);
   const latestReports = reports.filter((report) => report.fileUrl).slice(0, 2);
 
   return (
     <main className="bg-[#f7faf6] text-[#070707]">
+      {banner?.action ? (
+        <HomeBanner id={banner.item.id} text={banner.item.banner.text} href={banner.action.href} label={banner.action.label} />
+      ) : null}
       <div className="pt-4 sm:pt-4 lg:pt-5">
         <Hero content={home.hero} />
       </div>

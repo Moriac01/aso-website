@@ -204,6 +204,10 @@ export default async function PrivacyPage() {
             sert uniquement à faire fonctionner le site.
           </p>
           <p>
+            Le formulaire d’adhésion est un formulaire Microsoft Forms : les réponses sont conservées par
+            Microsoft pour le compte de l’ASO, qui les utilise uniquement pour gérer les adhésions.
+          </p>
+          <p>
             Ces prestataires n’utilisent pas vos données pour leur propre compte. Le détail figure dans nos{" "}
             <Link href="/mentions-legales#hebergement" className={linkClass}>
               mentions légales

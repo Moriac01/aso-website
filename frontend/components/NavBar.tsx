@@ -10,11 +10,11 @@ import { usePathname } from "next/navigation";
 import NavMobile from "./NavMobile";
 
 const navigation = [
-  ["À Propos", "/about"],
+  ["À propos", "/about"],
   ["Actions", "/actions"],
   ["Actualités", "/news"],
   ["Transparence", "/transparence"],
-  ["Devenir Membres", "/volunteers"],
+  ["Devenir membre", "/volunteers"],
   ["Contact", "/contact"],
 ];
 

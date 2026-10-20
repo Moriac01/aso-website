@@ -25,12 +25,12 @@ export const HOME_DEFAULTS = {
   pillars: [
     {
       title: "Éducation",
-      text: "Frais de scolarité, fournitures et suivi régulier des orphelins pris en charge, pour qu’ils réussissent à l’école.",
+      text: "Frais de scolarité, kits et fournitures scolaires, et suivi régulier à la maison et à l’école, pour que chaque enfant pris en charge réussisse.",
       image: { src: "/edu.jpg", alt: "Enfants pendant le soutien scolaire" },
     },
     {
       title: "Santé",
-      text: "Accompagnement des familles et accès aux soins essentiels pour une vie plus saine.",
+      text: "La moitié des frais de santé des enfants remboursée aux tutrices, sur présentation des factures de l’hôpital.",
       image: { src: "/sant.jpg", alt: "Une soignante avec un enfant" },
     },
     {
@@ -43,8 +43,8 @@ export const HOME_DEFAULTS = {
     title: "De l’aide d’urgence à l’accompagnement durable.",
     text: "Nous ne voulons pas seulement répondre aux besoins du jour. Nous construisons des solutions qui durent : l’école, les soins et un suivi régulier des enfants et de leurs familles.",
     cards: [
-      { label: "Pour les enfants", text: "Scolarité payée, fournitures et suivi régulier, jusqu’à la réussite." },
-      { label: "Pour les familles", text: "Un accompagnement psychosocial pour traverser le deuil et reprendre confiance." },
+      { label: "Pour les enfants", text: "Scolarité payée, kits scolaires et suivi régulier, jusqu’à la réussite." },
+      { label: "Pour les familles", text: "Des visites régulières et un accompagnement psychosocial pour traverser le deuil." },
     ],
   },
   callToAction: {

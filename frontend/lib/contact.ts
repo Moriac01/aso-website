@@ -32,6 +32,15 @@ export const phoneHref = (phone: string) => `tel:${phoneDigits(phone)}`;
 export const mapsHref = (address: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.replace(/\s+/g, " ").trim())}`;
 
+/** Lien WhatsApp vers un numéro (ou un lien wa.me déjà saisi), avec un message tout prêt. */
+export function whatsappHref(numberOrLink: string, message?: string): string | null {
+  const trimmed = numberOrLink.trim();
+  if (!trimmed) return null;
+  const base = /^https?:\/\//i.test(trimmed) ? trimmed : `https://wa.me/${phoneDigits(trimmed).slice(1)}`;
+  if (!message) return base;
+  return `${base}${base.includes("?") ? "&" : "?"}text=${encodeURIComponent(message)}`;
+}
+
 const SOCIAL_LABELS: Record<SocialNetwork, string> = {
   facebook: "Facebook",
   instagram: "Instagram",
