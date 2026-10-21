@@ -67,7 +67,9 @@ export function PersonProfile({
           <PersonPortrait
             person={person}
             sizes="(max-width: 768px) 100vw, 400px"
-            className="max-h-[55dvh] md:max-h-none"
+            // Sur téléphone : pleine largeur, hauteur fixe (4:5 plafonné à 55 % de l'écran).
+            // Un cadre 4:5 avec une hauteur maximale rétrécit et déborde sur le nom dans Chrome Android.
+            frameClassName="h-[min(55dvh,calc((100vw-2rem)*1.25))] md:h-auto md:aspect-[4/5]"
             initialsClassName="text-7xl md:text-8xl"
           />
 

@@ -18,15 +18,18 @@ export function PersonPortrait({
   className = "",
   initialsClassName = "text-5xl md:text-7xl",
   zoomOnHover = false,
+  frameClassName = "aspect-[4/5]",
 }: {
   person: Person;
   sizes: string;
   className?: string;
   initialsClassName?: string;
   zoomOnHover?: boolean;
+  /** Format du cadre : 4:5 par défaut ; la fiche profil fixe une hauteur sur téléphone. */
+  frameClassName?: string;
 }) {
   return (
-    <div className={`relative aspect-[4/5] overflow-hidden bg-[#e6ede7] ${className}`}>
+    <div className={`relative overflow-hidden bg-[#e6ede7] ${frameClassName} ${className}`}>
       {person.photo ? (
         <Image
           src={person.photo}
