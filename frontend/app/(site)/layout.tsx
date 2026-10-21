@@ -23,7 +23,14 @@ export const metadata: Metadata = {
     siteName: "ASO — Association Soutien aux Orphelins",
     title: "ASO — Association Soutien aux Orphelins",
     description,
-    images: ["/IMG-20250913-WA0014.jpg"],
+    images: [
+      {
+        url: "/photos/partage-reseaux.jpg",
+        width: 1200,
+        height: 630,
+        alt: "L’équipe de l’ASO avec des enfants accompagnés, lors de la remise des kits scolaires",
+      },
+    ],
   },
 };
 
