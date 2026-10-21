@@ -1,10 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { Heart } from "lucide-react";
 
-import { PersonCard } from "@/components/PersonCard";
+import { TeamSection } from "@/components/team/TeamSection";
 import { AboutAccordion } from "@/app/(site)/about/AboutAccordion";
+import { getKeyFigures } from "@/server/content/keyFigures";
 import { getTeam } from "@/server/content/team";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "À propos — ASO",
+  description:
+    "Association à but non lucratif, apolitique et laïque, l’ASO accompagne les enfants orphelins de Bimbo et Bangui. Découvrez sa mission, ses valeurs et son bureau exécutif.",
+};
 
 const values = [
   {
@@ -26,9 +35,7 @@ const values = [
 ];
 
 export default async function APropos() {
-  const people = await getTeam();
-  const executives = people.filter((person) => person.type === "executive");
-  const community = people.filter((person) => person.type !== "executive");
+  const [people, keyFigures] = await Promise.all([getTeam(), getKeyFigures()]);
 
   return (
     <main className="bg-[#f7faf6] text-[#070707]">
@@ -36,7 +43,7 @@ export default async function APropos() {
         <div className="rounded-[2rem] border border-[#dfe7df] bg-gradient-to-br from-white via-[#f8fbff] to-[#eef7ff] p-6 shadow-lg sm:p-8 lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-widest text-[#0c7af8]">
+              <p className="text-sm font-semibold uppercase tracking-widest text-[#0a67d0]">
                 À propos
               </p>
               <h1 className="mt-4 text-4xl font-bold tracking-tight text-[#070707] sm:text-5xl">
@@ -52,8 +59,8 @@ export default async function APropos() {
 
             <div className="rounded-[1.75rem] border border-[#dfe7df] bg-white p-6 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
-                  <span className="text-2xl">❤</span>
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
+                  <Heart className="size-6" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm font-medium uppercase tracking-widest text-[#526057]">
@@ -82,25 +89,26 @@ export default async function APropos() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-8 sm:px-8 lg:px-12">
-        <div className="grid gap-4 md:grid-cols-4">
-          {[
-            { value: "100%", label: "Humanitaire" },
-            { value: "24/7", label: "Accompagnement" },
-            { value: "3", label: "Axes prioritaires" },
-            { value: "+10", label: "Familles soutenues" },
-          ].map((stat) => (
-            <div key={stat.label} className="rounded-3xl border border-[#dfe7df] bg-white p-6 text-center shadow-sm">
-              <p className="text-3xl font-bold text-[#070707]">{stat.value}</p>
-              <p className="mt-2 text-sm text-[#526057]">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {keyFigures.length > 0 ? (
+        <section className="mx-auto max-w-7xl px-5 pb-8 sm:px-8 lg:px-12">
+          {/* Chiffres clés du back-office : les mêmes que sur l'accueil. */}
+          <div className={`grid gap-4 ${["", "", "sm:grid-cols-2", "sm:grid-cols-3", "sm:grid-cols-2 lg:grid-cols-4"][Math.min(keyFigures.length, 4)]}`}>
+            {keyFigures.map((stat) => (
+              <div key={stat.label} className="rounded-3xl border border-[#dfe7df] bg-white p-6 text-center shadow-sm">
+                <p className="text-3xl font-bold text-[#070707]">
+                  {stat.value}
+                  {stat.suffix}
+                </p>
+                <p className="mt-2 text-sm text-[#526057]">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-12">
         <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-widest text-[#0a67d0]">
             Nos valeurs
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -111,7 +119,7 @@ export default async function APropos() {
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {values.map((value) => (
             <div key={value.title} className="rounded-3xl border border-[#dfe7df] bg-white p-6 shadow-sm">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                 <span className="text-lg font-bold">•</span>
               </div>
               <h3 className="text-xl font-semibold text-[#070707]">{value.title}</h3>
@@ -123,47 +131,11 @@ export default async function APropos() {
 
       <AboutAccordion />
 
-      {executives.length > 0 && (
-      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
-            Notre équipe
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
-            Notre bureau exécutif
-          </h2>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {executives.map((person) => (
-            <PersonCard key={person.id} person={person} />
-          ))}
-        </div>
-      </section>
-      )}
-
-      {community.length > 0 && (
-      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <div className="mb-8 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
-            La communauté ASO
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
-            Nos membres et bénévoles
-          </h2>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {community.map((person) => (
-            <PersonCard key={person.id} person={person} />
-          ))}
-        </div>
-      </section>
-      )}
+      {people.length > 0 && <TeamSection people={people} />}
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="rounded-[2rem] border border-[#dfe7df] bg-[#eef7ff] p-8 text-center shadow-sm sm:p-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
             Rejoignez notre engagement
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#070707] sm:text-4xl">
@@ -178,13 +150,13 @@ export default async function APropos() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/volunteers"
-              className="inline-flex items-center justify-center rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+              className="inline-flex items-center justify-center rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#08529f]"
             >
               Devenir bénévole
             </Link>
             <Link
               href="/actions"
-              className="inline-flex items-center justify-center rounded-full border border-[#0c7af8] px-6 py-3 text-sm font-semibold text-[#088efc] transition hover:bg-[#0c7af8] hover:text-white"
+              className="inline-flex items-center justify-center rounded-full border border-[#0a67d0] px-6 py-3 text-sm font-semibold text-[#0a67d0] transition hover:bg-[#0a67d0] hover:text-white"
             >
               Découvrir nos actions
             </Link>

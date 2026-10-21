@@ -4,6 +4,9 @@ import * as migration_20261016_162128_identite_legale from './20261016_162128_id
 import * as migration_20261016_165231_dons from './20261016_165231_dons';
 import * as migration_20261016_175312_mentions_legales from './20261016_175312_mentions_legales';
 import * as migration_20261019_192207_stockage_blob from './20261019_192207_stockage_blob';
+import * as migration_20261020_185016_page_accueil from './20261020_185016_page_accueil';
+import * as migration_20261020_215802_actions_annonces_adhesion from './20261020_215802_actions_annonces_adhesion';
+import * as migration_20261020_215900_annonces_initiales from './20261020_215900_annonces_initiales';
 
 export const migrations = [
   {
@@ -34,6 +37,21 @@ export const migrations = [
   {
     up: migration_20261019_192207_stockage_blob.up,
     down: migration_20261019_192207_stockage_blob.down,
-    name: '20261019_192207_stockage_blob'
+    name: '20261019_192207_stockage_blob',
+  },
+  {
+    up: migration_20261020_185016_page_accueil.up,
+    down: migration_20261020_185016_page_accueil.down,
+    name: '20261020_185016_page_accueil',
+  },
+  {
+    up: migration_20261020_215802_actions_annonces_adhesion.up,
+    down: migration_20261020_215802_actions_annonces_adhesion.down,
+    name: '20261020_215802_actions_annonces_adhesion',
+  },
+  {
+    up: migration_20261020_215900_annonces_initiales.up,
+    down: migration_20261020_215900_annonces_initiales.down,
+    name: '20261020_215900_annonces_initiales',
   },
 ];

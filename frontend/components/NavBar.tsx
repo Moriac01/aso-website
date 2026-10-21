@@ -10,11 +10,11 @@ import { usePathname } from "next/navigation";
 import NavMobile from "./NavMobile";
 
 const navigation = [
-  ["À Propos", "/about"],
+  ["À propos", "/about"],
   ["Actions", "/actions"],
   ["Actualités", "/news"],
   ["Transparence", "/transparence"],
-  ["Devenir Membres", "/volunteers"],
+  ["Devenir membre", "/volunteers"],
   ["Contact", "/contact"],
 ];
 
@@ -37,7 +37,7 @@ const NavBar = () => {
             <Link
               key={href}
               href={href}
-              className={`flex items-center justify-center font-semibold capitalize text-[15px] transition-colors hover:text-sky-500 ${pathname === href ? "text-sky-500" : ""}`}
+              className={`flex items-center justify-center font-semibold text-[15px] transition-colors hover:text-[#0a67d0] ${pathname === href ? "text-[#0a67d0]" : ""}`}
             >
               {label}
             </Link>
@@ -46,7 +46,7 @@ const NavBar = () => {
 
         <Button
           asChild
-          className="hidden justify-self-end font-semibold rounded-full bg-yellow-300 px-5 py-5 text-[15px] capitalize text-gray-700 hover:bg-yellow-500 hover:text-black lg:flex"
+          className="hidden justify-self-end font-semibold rounded-full bg-yellow-300 px-5 py-5 text-[15px] text-gray-700 hover:bg-yellow-500 hover:text-black lg:flex"
         >
           <Link href="/donate">
             faire un don <ArrowRight />

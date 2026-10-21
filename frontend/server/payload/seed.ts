@@ -68,7 +68,6 @@ if (!keyFigures.items?.length) {
       items: [
         { value: 10, suffix: "", label: "Orphelins pris en charge", source: "Présentation ASO" },
         { value: 90, suffix: "%", label: "De réussite scolaire", source: "Présentation ASO" },
-        { value: 5, suffix: "", label: "Mères veuves accompagnées (PAEMV)", source: "Projet PAEMV" },
       ],
     },
   });

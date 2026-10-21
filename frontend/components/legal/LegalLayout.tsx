@@ -25,7 +25,7 @@ export function LegalLayout({ eyebrow, title, intro, updatedAt, sections, relate
     <main className="bg-[#f7faf6] text-[#070707]">
       <section className="mx-auto max-w-7xl px-5 pb-12 pt-12 sm:px-8 lg:px-12 lg:pt-16">
         <div className="rounded-[2rem] bg-gradient-to-br from-[#eaf6ff] via-white to-[#f2f8ee] p-8 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-10 lg:p-14">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">{eyebrow}</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">{eyebrow}</p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-[#070707] sm:text-5xl">{title}</h1>
           <p className="mt-5 max-w-3xl text-base leading-8 text-[#526057] sm:text-lg">{intro}</p>
           <p className="mt-6 text-sm text-[#526057]">Dernière mise à jour : {updatedAt}</p>
@@ -39,7 +39,7 @@ export function LegalLayout({ eyebrow, title, intro, updatedAt, sections, relate
             <ol className="mt-4 space-y-2 text-sm">
               {sections.map((section, index) => (
                 <li key={section.id}>
-                  <a href={`#${section.id}`} className="flex gap-2 text-[#2c3a34] transition hover:text-[#0c7af8]">
+                  <a href={`#${section.id}`} className="flex gap-2 text-[#2c3a34] transition hover:text-[#0a67d0]">
                     <span className="text-[#526057]">{index + 1}.</span>
                     {section.title}
                   </a>
@@ -48,7 +48,7 @@ export function LegalLayout({ eyebrow, title, intro, updatedAt, sections, relate
             </ol>
             <Link
               href={related.href}
-              className="mt-5 inline-block border-t border-[#dfe7df] pt-4 text-sm font-semibold text-[#0c7af8] hover:text-[#0a67d0]"
+              className="mt-5 inline-block border-t border-[#dfe7df] pt-4 text-sm font-semibold text-[#0a67d0] hover:text-[#08529f]"
             >
               {related.label}
             </Link>
@@ -63,7 +63,7 @@ export function LegalLayout({ eyebrow, title, intro, updatedAt, sections, relate
               className="scroll-mt-8 rounded-[1.75rem] border border-[#dfe7df] bg-white p-6 shadow-[0_12px_35px_rgba(15,23,42,0.04)] sm:p-8"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0c7af8]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#eaf6ff] text-[#0a67d0]">
                   <Icon size={20} />
                 </div>
                 <h2 className="text-xl font-bold text-[#070707] sm:text-2xl">
@@ -98,18 +98,18 @@ export function ContactLine({ email }: { email: string | null }) {
   return email ? (
     <>
       par email à{" "}
-      <a href={`mailto:${email}`} className="font-semibold text-[#0c7af8] hover:text-[#0a67d0]">
+      <a href={`mailto:${email}`} className="font-semibold text-[#0a67d0] hover:text-[#08529f]">
         {email}
       </a>{" "}
       ou via notre{" "}
-      <Link href="/contact" className="font-semibold text-[#0c7af8] hover:text-[#0a67d0]">
+      <Link href="/contact" className="font-semibold text-[#0a67d0] hover:text-[#08529f]">
         formulaire de contact
       </Link>
     </>
   ) : (
     <>
       via notre{" "}
-      <Link href="/contact" className="font-semibold text-[#0c7af8] hover:text-[#0a67d0]">
+      <Link href="/contact" className="font-semibold text-[#0a67d0] hover:text-[#08529f]">
         formulaire de contact
       </Link>
     </>

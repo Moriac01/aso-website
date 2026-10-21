@@ -40,7 +40,7 @@ export function AboutAccordion() {
                 <span className="text-lg font-semibold text-[#070707] sm:text-xl">
                   {section.title}
                 </span>
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf6ff] text-2xl font-light text-[#0c7af8]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf6ff] text-2xl font-light text-[#0a67d0]">
                   {isOpen ? "−" : "+"}
                 </span>
               </button>

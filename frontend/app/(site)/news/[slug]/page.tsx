@@ -16,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const item = await getNewsBySlug((await params).slug);
-  if (!item) return { title: "Actualité introuvable — ASO" };
+  if (!item) return { title: "Actualité introuvable — ASO", robots: { index: false } };
   return {
     title: `${item.title} — ASO`,
     description: item.excerpt,
@@ -36,7 +36,7 @@ export default async function NewsDetailPage({
     return (
       <main className="bg-[#f7faf6] text-[#070707]">
         <section className="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 lg:px-12 lg:py-20">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
             Actualité introuvable
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-[#070707] sm:text-5xl">
@@ -48,7 +48,7 @@ export default async function NewsDetailPage({
           <div className="mt-8">
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 rounded-full bg-[#0c7af8] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0a67d0]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0a67d0] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#08529f]"
             >
               Retour aux actualités
             </Link>

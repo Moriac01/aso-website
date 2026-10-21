@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { NewsList } from "@/components/news/NewsList";
 import { getPublishedNews } from "@/services/news";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "Actualités — ASO",
+  description: "Descentes de terrain, projets et appels de l’Association Soutien aux Orphelins (ASO).",
+};
 
 export default async function NewsPage() {
   const items = await getPublishedNews();
@@ -13,7 +19,7 @@ export default async function NewsPage() {
       <section className="mx-auto max-w-7xl px-5 pb-8 pt-12 sm:px-8 lg:px-12 lg:pb-12 lg:pt-16">
         <div className="rounded-[2rem] border border-[#dfe7df] bg-gradient-to-br from-white via-[#f8fbff] to-[#eef7ff] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-8 lg:p-10">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0c7af8]">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#0a67d0]">
               Actualités
             </p>
             <h1 className="mt-4 text-4xl font-black tracking-tight text-[#070707] sm:text-5xl">
@@ -33,7 +39,7 @@ export default async function NewsPage() {
           </h2>
           <Link
             href="/"
-            className="text-sm font-semibold text-[#0c7af8] transition hover:text-[#0a67d0]"
+            className="text-sm font-semibold text-[#0a67d0] transition hover:text-[#08529f]"
           >
             Retour à l’accueil
           </Link>

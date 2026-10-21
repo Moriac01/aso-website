@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     news: News;
+    announcements: Announcement;
     'team-members': TeamMember;
     media: Media;
     'financial-reports': FinancialReport;
@@ -84,6 +85,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     news: NewsSelect<false> | NewsSelect<true>;
+    announcements: AnnouncementsSelect<false> | AnnouncementsSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'financial-reports': FinancialReportsSelect<false> | FinancialReportsSelect<true>;
@@ -102,11 +104,17 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    'home-page': HomePage;
+    'actions-page': ActionsPage;
+    membership: Membership;
     'key-figures': KeyFigure;
     'site-settings': SiteSetting;
     'donation-settings': DonationSetting;
   };
   globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'actions-page': ActionsPageSelect<false> | ActionsPageSelect<true>;
+    membership: MembershipSelect<false> | MembershipSelect<true>;
     'key-figures': KeyFiguresSelect<false> | KeyFiguresSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'donation-settings': DonationSettingsSelect<false> | DonationSettingsSelect<true>;
@@ -229,6 +237,108 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * Annonces de la page Actions. Elles apparaissent et disparaissent toutes seules selon leurs dates. Sans annonce en cours ou à venir, la page affiche le contenu de secours choisi dans « Page Actions ».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements".
+ */
+export interface Announcement {
+  id: number;
+  title: string;
+  /**
+   * Deux phrases au plus, affichées sur la page Actions.
+   */
+  summary: string;
+  /**
+   * Avant ce jour : « À partir du… ».
+   */
+  startDate: string;
+  /**
+   * Après ce jour, l'annonce disparaît du site.
+   */
+  endDate?: string | null;
+  /**
+   * Calculé à partir des dates.
+   */
+  state?: string | null;
+  /**
+   * Décochez pour préparer une annonce à l'avance.
+   */
+  visible?: boolean | null;
+  kind: 'candidatures' | 'adhesion' | 'evenement' | 'autre';
+  /**
+   * Rempli automatiquement à partir du titre.
+   */
+  slug?: string | null;
+  button: {
+    action: 'details' | 'link' | 'none';
+    /**
+     * Ex. : /adherer, ou une adresse complète https://…
+     */
+    url?: string | null;
+    label?: string | null;
+    /**
+     * Ex. : « Être prévenu ».
+     */
+    labelBeforeStart?: string | null;
+  };
+  banner?: {
+    show?: boolean | null;
+    /**
+     * Laissé vide : le titre de l'annonce.
+     */
+    text?: string | null;
+  };
+  /**
+   * Une fois l'annonce terminée, sa carte reste un mois avec « Lire le compte rendu » vers cette actualité.
+   */
+  report?: (number | null) | News;
+  details: {
+    intro?: string | null;
+    posters?: (number | Media)[] | null;
+    /**
+     * Chaque poste a son propre bouton « Postuler ».
+     */
+    positions?:
+      | {
+          title: string;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    profile?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    benefits?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    apply: {
+      method: 'email' | 'link' | 'volunteerForm' | 'none';
+      /**
+       * Laissée vide : l'email public de l'ASO.
+       */
+      email?: string | null;
+      /**
+       * L'objet devient « Candidature – Intitulé du poste ».
+       */
+      subjectPrefix?: string | null;
+      url?: string | null;
+      /**
+       * Ex. : « Joignez votre CV et votre lettre de motivation, en précisant le poste visé en objet. »
+       */
+      instructions?: string | null;
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -459,6 +569,10 @@ export interface PayloadLockedDocument {
         value: number | News;
       } | null)
     | ({
+        relationTo: 'announcements';
+        value: number | Announcement;
+      } | null)
+    | ({
         relationTo: 'team-members';
         value: number | TeamMember;
       } | null)
@@ -548,6 +662,71 @@ export interface NewsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements_select".
+ */
+export interface AnnouncementsSelect<T extends boolean = true> {
+  title?: T;
+  summary?: T;
+  startDate?: T;
+  endDate?: T;
+  state?: T;
+  visible?: T;
+  kind?: T;
+  slug?: T;
+  button?:
+    | T
+    | {
+        action?: T;
+        url?: T;
+        label?: T;
+        labelBeforeStart?: T;
+      };
+  banner?:
+    | T
+    | {
+        show?: T;
+        text?: T;
+      };
+  report?: T;
+  details?:
+    | T
+    | {
+        intro?: T;
+        posters?: T;
+        positions?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+        profile?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        benefits?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        apply?:
+          | T
+          | {
+              method?: T;
+              email?: T;
+              subjectPrefix?: T;
+              url?: T;
+              instructions?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -792,6 +971,157 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Textes de la page d'accueil. Chiffres clés, actualités et rapports financiers se gèrent dans leurs rubriques.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  hero?: {
+    title?: string | null;
+    subtitle?: string | null;
+    /**
+     * Sans photo choisie : la photo actuelle du site est conservée.
+     */
+    image?: (number | null) | Media;
+    caption?: string | null;
+  };
+  /**
+   * Laissé vide : le texte actuel du site s'affiche.
+   */
+  story?: string | null;
+  pillarsTitle?: string | null;
+  /**
+   * De 1 à 4 cartes. Sans photo choisie, la carte garde la photo actuelle du site à la même position (1re, 2e, 3e), ou une illustration.
+   */
+  pillars?:
+    | {
+        title: string;
+        text: string;
+        image?: (number | null) | Media;
+        /**
+         * Petite étiquette sur la carte. Ex. : « Lancement en décembre 2026 ».
+         */
+        badge?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  approach?: {
+    title?: string | null;
+    text?: string | null;
+    cards?:
+      | {
+          label: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  callToAction?: {
+    title?: string | null;
+    text?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Textes de la page Actions. Tout champ vidé reprend le texte d'origine. Les annonces se gèrent dans « Annonces », les chiffres dans « Chiffres clés ».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "actions-page".
+ */
+export interface ActionsPage {
+  id: number;
+  hero?: {
+    title?: string | null;
+    intro?: string | null;
+  };
+  programsTitle?: string | null;
+  /**
+   * Sans photo choisie, un programme garde la photo actuelle du site à la même position. Décochez « Afficher » pour préparer un programme à l'avance (ex. : PAEMV).
+   */
+  programs?:
+    | {
+        title: string;
+        visible?: boolean | null;
+        text: string;
+        image?: (number | null) | Media;
+        points?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Ex. : « Lancement en décembre 2026 ».
+         */
+        badge?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  announcementsSection?: {
+    title?: string | null;
+    intro?: string | null;
+  };
+  fallback?: {
+    choice?: ('news' | 'method' | 'join') | null;
+    newsTitle?: string | null;
+    newsIntro?: string | null;
+    methodTitle?: string | null;
+    methodIntro?: string | null;
+    methodSteps?:
+      | {
+          title: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    joinTitle?: string | null;
+    joinIntro?: string | null;
+  };
+  donation?: {
+    title?: string | null;
+    text?: string | null;
+  };
+  callToAction?: {
+    title?: string | null;
+    text?: string | null;
+  };
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Les adhésions se font par le formulaire Microsoft Forms. Avant l'ouverture, les visiteurs peuvent demander à être prévenus sur WhatsApp. Les montants ne sont affichés que dans le formulaire.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "membership".
+ */
+export interface Membership {
+  id: number;
+  /**
+   * Le lien « Envoyer » du formulaire (https://forms.office.com/…). Le bouton n'apparaît qu'une fois ce lien collé.
+   */
+  formUrl?: string | null;
+  openingDate?: string | null;
+  /**
+   * Laissée vide : les adhésions restent ouvertes.
+   */
+  closingDate?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  /**
+   * Message pré-rempli envoyé au numéro WhatsApp de l'ASO (Coordonnées & réseaux).
+   */
+  notifyMessage?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Ces chiffres engagent la crédibilité de l'ASO : n'indiquez que des valeurs vérifiables.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -892,6 +1222,142 @@ export interface DonationSetting {
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        image?: T;
+        caption?: T;
+      };
+  story?: T;
+  pillarsTitle?: T;
+  pillars?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        image?: T;
+        badge?: T;
+        id?: T;
+      };
+  approach?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        cards?:
+          | T
+          | {
+              label?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  callToAction?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "actions-page_select".
+ */
+export interface ActionsPageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        intro?: T;
+      };
+  programsTitle?: T;
+  programs?:
+    | T
+    | {
+        title?: T;
+        visible?: T;
+        text?: T;
+        image?: T;
+        points?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        badge?: T;
+        id?: T;
+      };
+  announcementsSection?:
+    | T
+    | {
+        title?: T;
+        intro?: T;
+      };
+  fallback?:
+    | T
+    | {
+        choice?: T;
+        newsTitle?: T;
+        newsIntro?: T;
+        methodTitle?: T;
+        methodIntro?: T;
+        methodSteps?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+        joinTitle?: T;
+        joinIntro?: T;
+      };
+  donation?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
+  callToAction?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "membership_select".
+ */
+export interface MembershipSelect<T extends boolean = true> {
+  formUrl?: T;
+  openingDate?: T;
+  closingDate?: T;
+  title?: T;
+  intro?: T;
+  notifyMessage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

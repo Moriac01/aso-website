@@ -8,15 +8,20 @@ import { honeypot } from "./forms";
  */
 
 export const donationProjects = [
-  { value: "general", label: "Là où le besoin est le plus grand" },
-  { value: "education", label: "Éducation des orphelins" },
-  { value: "paemv", label: "Projet PAEMV (mères veuves)" },
-  { value: "psychosocial", label: "Soutien psychosocial" },
+  { value: "general", label: "Là où le besoin est le plus grand", open: true },
+  { value: "education", label: "Éducation des orphelins", open: true },
+  // Projet PAEMV : lancement prévu en décembre 2026. Passer `open` à true pour le proposer aux donateurs.
+  // La valeur reste connue du back-office (dons déjà enregistrés, choix possible par la Trésorerie).
+  { value: "paemv", label: "Projet PAEMV (mères veuves)", open: false },
+  { value: "psychosocial", label: "Soutien psychosocial", open: true },
 ] as const;
 
 export type DonationProject = (typeof donationProjects)[number]["value"];
 
-const projectValues = donationProjects.map((p) => p.value) as [DonationProject, ...DonationProject[]];
+/** Projets proposés aux donateurs sur le site. */
+export const openDonationProjects = donationProjects.filter((p) => p.open);
+
+const projectValues = openDonationProjects.map((p) => p.value) as [DonationProject, ...DonationProject[]];
 
 const phoneDigits = (value: string) => value.replace(/\D/g, "").length;
 

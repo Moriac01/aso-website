@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 const UPDATED_AT = "16 octobre 2026";
 
 const formatDate = (date: string | null) =>
-  date ? new Date(date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : null;
+  date ? new Date(date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Bangui" }) : null;
 
-const linkClass = "font-semibold text-[#0c7af8] hover:text-[#0a67d0]";
+const linkClass = "font-semibold text-[#0a67d0] hover:text-[#08529f]";
 
 export default async function LegalNoticePage() {
   const legal = await getLegalInfo();

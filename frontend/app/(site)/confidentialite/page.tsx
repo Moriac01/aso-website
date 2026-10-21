@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 const UPDATED_AT = "16 octobre 2026";
 
-const linkClass = "font-semibold text-[#0c7af8] hover:text-[#0a67d0]";
+const linkClass = "font-semibold text-[#0a67d0] hover:text-[#08529f]";
 
 /** Tableau simple, lisible sur téléphone (les lignes deviennent des cartes). */
 function Table({ head, rows }: { head: string[]; rows: string[][] }) {
@@ -202,6 +202,10 @@ export default async function PrivacyPage() {
             (Gmail). Ces services utilisent des serveurs situés hors de la République centrafricaine, notamment
             aux États-Unis ou dans l’Union européenne. En envoyant un formulaire, vous acceptez ce transfert, qui
             sert uniquement à faire fonctionner le site.
+          </p>
+          <p>
+            Le formulaire d’adhésion est un formulaire Microsoft Forms : les réponses sont conservées par
+            Microsoft pour le compte de l’ASO, qui les utilise uniquement pour gérer les adhésions.
           </p>
           <p>
             Ces prestataires n’utilisent pas vos données pour leur propre compte. Le détail figure dans nos{" "}

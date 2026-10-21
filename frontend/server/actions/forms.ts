@@ -39,6 +39,37 @@ const SERVER_ERROR: FormFailure = {
     "Votre demande n’a pas pu être enregistrée. Merci de réessayer dans quelques instants ou de nous contacter par téléphone.",
 };
 
+const TOO_MANY: FormFailure = {
+  ok: false,
+  error:
+    "Vous avez déjà envoyé plusieurs demandes ces dernières minutes. Merci de réessayer dans une heure, ou de nous écrire sur WhatsApp.",
+};
+
+/** Limites d'envoi par heure : par adresse email, et pour tout le formulaire (protection contre les robots). */
+const LIMIT_PER_EMAIL = 3;
+const LIMIT_PER_FORM = 40;
+
+async function tooManyRecent(
+  payload: Payload,
+  collection: "contact-messages" | "applications" | "donations",
+  email: string | undefined,
+): Promise<boolean> {
+  const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const recent = { createdAt: { greater_than: since } };
+  const address = email?.trim();
+  const [mine, all] = await Promise.all([
+    address
+      ? payload.count({
+          collection,
+          overrideAccess: true,
+          where: { and: [recent, { email: { in: [address, address.toLowerCase()] } }] },
+        })
+      : Promise.resolve({ totalDocs: 0 }),
+    payload.count({ collection, overrideAccess: true, where: recent }),
+  ]);
+  return mine.totalDocs >= LIMIT_PER_EMAIL || all.totalDocs >= LIMIT_PER_FORM;
+}
+
 /** Retire le champ piège avant l'enregistrement. */
 function withoutHoneypot<T extends { website?: string }>(values: T): Omit<T, "website"> {
   const copy = { ...values };
@@ -84,6 +115,7 @@ export async function submitContactMessage(input: unknown): Promise<FormResult> 
 
   try {
     const payload = await getPayload({ config });
+    if (await tooManyRecent(payload, "contact-messages", data.email)) return TOO_MANY;
     const doc = await payload.create({
       collection: "contact-messages",
       data: { ...data, status: "new" },
@@ -112,6 +144,7 @@ export async function submitMemberApplication(input: unknown): Promise<FormResul
 
   try {
     const payload = await getPayload({ config });
+    if (await tooManyRecent(payload, "applications", data.email)) return TOO_MANY;
     const doc = await payload.create({
       collection: "applications",
       data: { ...data, type: "member", status: "new" },
@@ -149,6 +182,7 @@ export async function submitVolunteerApplication(input: unknown): Promise<FormRe
 
   try {
     const payload = await getPayload({ config });
+    if (await tooManyRecent(payload, "applications", data.email)) return TOO_MANY;
     const doc = await payload.create({
       collection: "applications",
       data: { ...data, type: "volunteer", status: "new" },
@@ -191,6 +225,7 @@ export async function submitDonation(input: unknown): Promise<DonationResult> {
 
   try {
     const payload = await getPayload({ config });
+    if (await tooManyRecent(payload, "donations", data.email)) return TOO_MANY;
     const doc = await payload.create({
       collection: "donations",
       data: {

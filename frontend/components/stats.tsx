@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 import type { KeyFigure } from "@/server/content/keyFigures";
 
@@ -10,36 +10,34 @@ type CounterProps = {
   duration?: number;
 };
 
-function Counter({ end, duration = 2000 }: CounterProps) {
-  const [count, setCount] = useState(0);
+function Counter({ end, duration = 1500 }: CounterProps) {
+  // Le vrai chiffre dès l'affichage : Google, les aperçus de liens et les navigateurs
+  // sans JavaScript ne voient plus « 0 ». L'animation part de 0 seulement à l'écran.
+  const [count, setCount] = useState(end);
+  const reduceMotion = useReducedMotion();
 
   const startCounting = () => {
-    // Valeur nulle, négative ou décimale saisie dans le back-office : affichage direct.
-    if (end <= 0 || !Number.isInteger(end)) {
-      setCount(end);
-      return;
-    }
-    let start = 0;
-    const stepTime = Math.max(1, Math.floor(duration / end));
-
+    // Valeur décimale, nulle ou très petite, ou animations désactivées sur l'appareil : rien à animer.
+    if (reduceMotion || end <= 1 || !Number.isInteger(end)) return;
+    const steps = Math.min(end, 40);
+    let step = 0;
+    setCount(0);
     const timer = setInterval(() => {
-      start += 1;
-      setCount(start);
-      if (start >= end) clearInterval(timer);
-    }, stepTime);
+      step += 1;
+      setCount(Math.round((end * step) / steps));
+      if (step >= steps) clearInterval(timer);
+    }, duration / steps);
   };
 
   return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      onViewportEnter={startCounting}
-      viewport={{ once: true }}
-    >
+    <motion.span onViewportEnter={startCounting} viewport={{ once: true }}>
       {count}
     </motion.span>
   );
 }
+
+// Autant de colonnes que de chiffres (jusqu'à 4 par ligne).
+const columns = ["", "sm:mx-auto sm:max-w-sm", "sm:grid-cols-2", "sm:grid-cols-3", "sm:grid-cols-2 lg:grid-cols-4"];
 
 /** Chiffres clés gérés dans le back-office (/admin → Chiffres clés). */
 export default function Stats({ items }: { items: KeyFigure[] }) {
@@ -48,12 +46,12 @@ export default function Stats({ items }: { items: KeyFigure[] }) {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-2  sm:px-8 lg:px-12 lg:py-3">
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className={`grid gap-4 ${columns[Math.min(stats.length, 4)]}`}>
         {stats.map((s) => (
           <motion.div
             key={s.label}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ y: 12 }}
+            whileInView={{ y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
             className="rounded-3xl border border-[#dfe7df] bg-white p-6 text-center shadow-[0_12px_30px_rgba(15,23,42,0.04)]"

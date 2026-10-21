@@ -128,6 +128,15 @@ Le reste du texte (hébergeurs, durées de conservation, droits) est dans le cod
 Durées de conservation annoncées : messages 5 ans, adhésions et bénévolat 5 ans après la fin de
 l'engagement, dons 10 ans. Leur suppression n'est pas encore automatique (voir plus bas).
 
+## Page Actions, annonces et adhésion
+
+- **Contenu → Page Actions** : textes de la page `/actions` (haut de page, programmes, appel final, titre Google). Tout champ vidé reprend le texte d'origine (`server/content/actions-defaults.ts`). Un programme peut être préparé à l'avance (case « Afficher » décochée).
+- **Contenu → Annonces** : appels à candidatures, campagne d'adhésion, événements. Chaque annonce a une date de début et une date de fin : l'étiquette (« À partir du… », « En cours · jusqu'au… ») et l'affichage sont calculés à l'heure de Bangui (`lib/dates.ts`, `lib/announcements.ts`). Une annonce terminée disparaît, sauf si une actualité « compte rendu » est liée (affichée encore 30 jours). Option : bandeau en haut de l'accueil pendant l'annonce.
+- **Page détaillée** `/annonces/<slug>` : postes (un bouton « Postuler » par poste, email avec objet pré-rempli), profil, avantages, consignes, affiches, question WhatsApp. Réponse possible par email, par un lien (Microsoft Forms…) ou par le formulaire bénévole.
+- **Sans annonce en cours ou à venir**, la section affiche le contenu de secours choisi dans Page Actions : dernières actualités, « Comment nous accompagnons un enfant » (étapes) ou « Il y a toujours une place pour vous ».
+- **Contenu → Adhésion** : lien du formulaire Microsoft Forms, dates d'ouverture et de clôture, message WhatsApp « Être prévenu ». Bloc affiché sur `/volunteers` (« Devenir membre »), adresse courte `/adherer`. Les montants de cotisation ne figurent que dans le formulaire.
+- Les deux annonces de la campagne 2026–2027 sont créées par la migration `20261020_215900_annonces_initiales` (seulement si aucune annonce n'existe).
+
 ## Formulaires publics
 
 Contact, adhésion et bénévolat passent par des **Server Actions** (`server/actions/forms.ts`) :

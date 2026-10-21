@@ -29,8 +29,25 @@ export function phoneDigits(phone: string): string {
 
 export const phoneHref = (phone: string) => `tel:${phoneDigits(phone)}`;
 
+/** Affichage lisible : « 70107514 » ou « +23670107514 » → « +236 70 10 75 14 ». Autres formats : tels que saisis. */
+export function formatPhone(phone: string): string {
+  const full = phoneDigits(phone);
+  const local = full.startsWith(`+${CAR_PREFIX}`) ? full.slice(CAR_PREFIX.length + 1) : null;
+  if (local && local.length === 8) return `+${CAR_PREFIX} ${local.match(/\d{2}/g)!.join(" ")}`;
+  return phone.trim();
+}
+
 export const mapsHref = (address: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.replace(/\s+/g, " ").trim())}`;
+
+/** Lien WhatsApp vers un numéro (ou un lien wa.me déjà saisi), avec un message tout prêt. */
+export function whatsappHref(numberOrLink: string, message?: string): string | null {
+  const trimmed = numberOrLink.trim();
+  if (!trimmed) return null;
+  const base = /^https?:\/\//i.test(trimmed) ? trimmed : `https://wa.me/${phoneDigits(trimmed).slice(1)}`;
+  if (!message) return base;
+  return `${base}${base.includes("?") ? "&" : "?"}text=${encodeURIComponent(message)}`;
+}
 
 const SOCIAL_LABELS: Record<SocialNetwork, string> = {
   facebook: "Facebook",
