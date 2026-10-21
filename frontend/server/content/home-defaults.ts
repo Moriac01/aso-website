@@ -16,7 +16,7 @@ export const HOME_DEFAULTS = {
     title: "Offrir espoir et avenir aux orphelins de Bimbo.",
     subtitle:
       "Avec votre soutien, l’ASO accompagne des enfants orphelins dans leur scolarité, leur santé et leur épanouissement.",
-    image: { src: "/IMG-20250913-WA0014.jpg", alt: "Enfant accompagné par l’association" },
+    image: { src: "/photos/accueil-remise-kit.jpg", alt: "Une bénévole de l’ASO remet son kit scolaire à un enfant, le 3 octobre 2026" },
     caption: "Donnez le sourire pour un avenir meilleur.",
   },
   story:
@@ -26,7 +26,7 @@ export const HOME_DEFAULTS = {
     {
       title: "Éducation",
       text: "Frais de scolarité, kits et fournitures scolaires, et suivi régulier à la maison et à l’école, pour que chaque enfant pris en charge réussisse.",
-      image: { src: "/edu.jpg", alt: "Enfants pendant le soutien scolaire" },
+      image: { src: "/photos/scolarite-kits-familles.jpg", alt: "L’équipe de l’ASO avec des enfants qui ont reçu leurs kits scolaires" },
     },
     {
       title: "Santé",
@@ -36,7 +36,7 @@ export const HOME_DEFAULTS = {
     {
       title: "Soutien psychosocial",
       text: "Un accompagnement pour aider les enfants et leurs familles à traverser le deuil et à reprendre confiance.",
-      image: { src: "/IMG-20250913-WA0016.jpg", alt: "Enfant assis contre un mur" },
+      image: { src: "/photos/psychosocial-visite.jpg", alt: "L’équipe de l’ASO en visite chez une tutrice et ses enfants" },
     },
   ] satisfies HomePillarDefault[],
   approach: {

@@ -36,7 +36,7 @@ export const ACTIONS_DEFAULTS = {
         "Kits et fournitures scolaires",
         "Suivi scolaire à domicile et à l’école",
       ],
-      image: { src: "/edu.jpg", alt: "Enfants à l’école" },
+      image: { src: "/photos/scolarite-remise-kit.jpg", alt: "Une bénévole de l’ASO remet son kit scolaire à un élève" },
     },
     {
       title: "Santé",
@@ -48,13 +48,13 @@ export const ACTIONS_DEFAULTS = {
       title: "Soutien psychosocial",
       text: "Un accompagnement pour aider les enfants et leurs familles à traverser le deuil et à reprendre confiance.",
       points: [],
-      image: { src: "/IMG-20250913-WA0016.jpg", alt: "Enfant assis contre un mur" },
+      image: { src: "/photos/psychosocial-visite.jpg", alt: "L’équipe de l’ASO en visite chez une tutrice et ses enfants" },
     },
     {
       title: "Suivi des familles",
       text: "Des visites régulières à domicile pour connaître la situation de chaque famille et ajuster notre aide.",
       points: ["Visites régulières des familles", "Besoins suivis dans la durée"],
-      image: { src: "/IMG-20250913-WA0015.jpg", alt: "Enfants souriants" },
+      image: { src: "/photos/suivi-familles-visites.jpg", alt: "L’équipe de l’ASO en route vers les familles, dans le quartier" },
     },
   ] satisfies ProgramDefault[],
   announcements: {
